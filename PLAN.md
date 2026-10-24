@@ -57,13 +57,13 @@ Ulteriori verifiche effettuate:
 - avvio del binario self-contained installato, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.3`;
-- GitHub Action della release `v1.4.3` completata con esito `success`;
-- CI sul commit `71474f3` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
-- MSI pubblico v1.4.3 scaricato e verificato: 59.686.912 byte, SHA-256 `7EF9DDA1548DC7DB841C4FF32503E0878ED4494CF25AADB38D20764EF3A12749`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.4`;
+- GitHub Action della release `v1.4.4` completata con esito `success`;
+- CI sul commit `756418f` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
+- MSI pubblico v1.4.4 scaricato e verificato: 59.682.816 byte, SHA-256 `227B83EF4075E0EBD511AB83F5977B0C9FBD26FFEC9DF939535BBD1CFE534188`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
-- client 1.4.3 riconosce la release `v1.4.3` come versione corrente.
+- client 1.4.4 riconosce la release `v1.4.4` come corrente senza dipendere dal limite API GitHub.
 - backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
 ## Prossimi incrementi
