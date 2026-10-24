@@ -912,7 +912,8 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
                     application.BackupInstaller = application.HasInstaller;
                     application.BackupSettings = application.HasSettings;
                     application.BackupData = application.HasData;
-                    application.BackupInstalledFiles = false;
+                    application.BackupInstalledFiles = application.Source == "Script personale"
+                                                       && application.HasInstalledFiles;
                     break;
             }
         }

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.1 — 24 ottobre 2026
+
+- n8n abilita per impostazione iniziale il backup del package npm installato;
+- configurazione n8n separata dai dati e disponibile nel componente impostazioni;
+- profilo completo include i file installati degli strumenti personali dotati di cartella applicativa;
+- database WAL, workflow, storage e moduli dei nodi personalizzati vengono inclusi nei dati n8n.
+
 ## 1.7.0 — 24 ottobre 2026
 
 - icona fornita dall'utente modernizzata con simbolo bianco su gradiente blu-verde e nodi luminosi;

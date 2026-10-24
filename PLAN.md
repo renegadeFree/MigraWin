@@ -56,6 +56,8 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] n8n include package npm completo, database, workflow, storage e moduli dei nodi personalizzati.
 - [x] Dump PM2 e configurazione n8n sono classificati come componenti sensibili con attivazione esplicita.
 - [x] La scheda n8n verifica la presenza del processo nel dump PM2 senza assumerne l'esistenza.
+- [x] n8n porta attivo il backup del package installato e include database/WAL, storage e nodi personalizzati.
+- [x] Configurazione n8n spostata nel componente impostazioni e profilo completo esteso agli strumenti personali installati.
 
 ## Collaudi eseguiti
 

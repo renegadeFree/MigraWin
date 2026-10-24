@@ -222,7 +222,7 @@ public sealed class PersonalScriptDiscoveryService
             ProductUrl = productUrl,
             SupportLevel = SupportLevel.Archivable,
             BackupData = true,
-            BackupSettings = false,
+            BackupSettings = true,
             BackupInstalledFiles = backupInstalledFiles,
             EstimatedSize = estimatedSize
         };

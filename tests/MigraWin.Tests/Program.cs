@@ -167,6 +167,7 @@ try
     var n8nTool = personalTools.Single(tool => tool.DisplayName == "n8n");
     var n8nSources = AdapterCatalog.GetSources(n8nTool);
     Assert(n8nTool.HasData
+           && n8nTool.HasSettings
            && n8nTool.BackupInstalledFiles
            && n8nSources.Any(source => source.Includes?.Contains("nodes/node_modules/**") == true)
            && n8nSources.Any(source => source.Root.EndsWith(@"\.n8n\config", StringComparison.OrdinalIgnoreCase)
