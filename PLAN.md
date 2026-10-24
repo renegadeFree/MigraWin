@@ -35,6 +35,7 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Esportazione e importazione `.migrawin` in un singolo file con estrazione controllata.
 - [x] Controllo aggiornamenti, download MSI e verifica SHA-256 da GitHub Releases.
 - [x] GitHub Action per build e pubblicazione delle future release con tag `v*`.
+- [x] Adattatore Git verificato end-to-end con backup cifrato e ripristino in cartella isolata.
 
 ## Collaudi eseguiti
 
@@ -52,10 +53,12 @@ Ulteriori verifiche effettuate:
 - avvio del binario self-contained installato, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.0`;
-- GitHub Action della release completata con esito `success`;
-- MSI pubblico scaricato nuovamente e verificato: 59.682.816 byte, SHA-256 `341F93E945C08B43400B0FFF986E430BA924B6C6103A0BA39CCF2B0059B78622`;
-- client di aggiornamento installato: release `v1.4.0` riconosciuta come versione corrente.
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.2`;
+- GitHub Action delle release `v1.4.0` e `v1.4.1` completata con esito `success`;
+- MSI pubblico v1.4.2 scaricato e verificato: 59.682.816 byte, SHA-256 `0E0F97DFFCD2371E904FDB8F0B9303546885B159812A5553DC7F3311C9A59C08`;
+- aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
+- installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
+- client 1.4.2 riconosce la release `v1.4.2` come versione corrente.
 
 ## Prossimi incrementi
 
@@ -64,7 +67,7 @@ Ulteriori verifiche effettuate:
 - [x] Confronto tra snapshot e rapporto differenziale visuale.
 - [x] Incapsulamento e importazione dell'archivio autonomo in un unico file.
 - [x] Pianificazione protetta tramite Utilità di pianificazione e chiavi DPAPI.
-- [ ] Adattatori con controlli di versione e ripristino automatico end-to-end.
+- [ ] Altri adattatori applicativi con controlli di versione e ripristino automatico end-to-end.
 - [ ] Firma Authenticode dell'eseguibile e del pacchetto MSI.
 - [ ] Verifiche High Contrast, DPI 200% e Windows con effetti di trasparenza disattivati.
 - [ ] Ambiente di test dedicato per Store, credenziali e applicazioni già installate.
