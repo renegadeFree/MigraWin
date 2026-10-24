@@ -65,7 +65,11 @@ public sealed class PersonalScriptDiscoveryService
             "Automazione workflow",
             "https://n8n.io/",
             Path.Combine(_appData, "npm", "node_modules", "n8n"),
-            $"{(IsN8nManagedByPm2() ? "Avvio PM2 rilevato" : "Avvio PM2 non rilevato")}. " +
+            $"{(IsN8nManagedByPm2()
+                ? "Avvio PM2 rilevato."
+                : File.Exists(Path.Combine(_userProfile, "avvia_n8n.vbs"))
+                    ? "Avvio tramite avvia_n8n.vbs rilevato; avvio PM2 non rilevato."
+                    : "Avvio PM2 non rilevato.")} " +
             "Arresta n8n prima del backup per copiare il database in modo coerente.",
             copyInstalledFiles: true);
         AddNpmTool(

@@ -43,6 +43,8 @@ Con n8n selezionato, il backup comprende:
 
 La scheda n8n indica se nel dump PM2 è presente un processo chiamato `n8n`. Se il processo non è presente, il backup conserva comunque n8n e la sua configurazione, ma non può ricreare un avvio PM2 che non esisteva nel PC di origine. Se era presente, dopo il ripristino verifica il dump e avvia i processi con `pm2 resurrect`. MigraWin non avvia automaticamente processi personali.
 
+Se n8n viene avviato tramite `avvia_n8n.vbs`, la scheda lo segnala e il file viene incluso nelle impostazioni n8n. Anche `n8n-config.js` viene conservato. Questi script vengono ripristinati come file, non eseguiti automaticamente.
+
 La copia dei file installati non equivale a un installer. Quando un'applicazione contiene possibili credenziali, il componente viene indicato come sensibile.
 
 I file di configurazione che contengono valori associati a password, token, chiavi API o chiavi private vengono esclusi per impostazione iniziale. Puoi autorizzarne l'acquisizione con **Includi configurazioni che possono contenere segreti**; il file resta cifrato e nel ripristino il componente sensibile non è preselezionato.

@@ -10,7 +10,7 @@
     <ApplicationIcon>Assets\MigraWin.ico</ApplicationIcon>
     <AssemblyName>MigraWin</AssemblyName>
     <RootNamespace>MigraWin</RootNamespace>
-    <Version>1.7.1</Version>
+    <Version>1.7.2</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <Authors>Paolo</Authors>
     <Product>MigraWin</Product>

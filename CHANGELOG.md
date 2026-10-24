@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.2 — 24 ottobre 2026
+
+- riconoscimento esplicito dell'avvio n8n tramite `avvia_n8n.vbs`;
+- `avvia_n8n.vbs` e `n8n-config.js` sono descritti come script inclusi nelle impostazioni n8n;
+- chiarito che gli script di avvio vengono ripristinati ma non eseguiti automaticamente.
+
 ## 1.7.1 — 24 ottobre 2026
 
 - n8n abilita per impostazione iniziale il backup del package npm installato;

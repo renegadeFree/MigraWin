@@ -6,7 +6,7 @@
 
 [![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
 
-[Scarica MigraWin 1.7.1](https://github.com/renegadeFree/MigraWin/releases/download/v1.7.1/MigraWin-1.7.1-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
+[Scarica MigraWin 1.7.2](https://github.com/renegadeFree/MigraWin/releases/download/v1.7.2/MigraWin-1.7.2-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
 
 [![Panoramica di MigraWin](docs/images/panoramica.png)](docs/images/panoramica.png)
 
@@ -86,17 +86,17 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 
 Requisiti: **Windows 11 x64**.
 
-1. Scarica [MigraWin 1.7.1 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.7.1/MigraWin-1.7.1-x64.msi).
+1. Scarica [MigraWin 1.7.2 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.7.2/MigraWin-1.7.2-x64.msi).
 2. Apri l'MSI. L'installazione avviene per l'utente corrente e non richiede privilegi amministrativi; crea i collegamenti nel menu Start e sul Desktop.
 3. Avvia MigraWin dal menu Start.
 
 Puoi verificare il download:
 
 ```powershell
-Get-FileHash .\MigraWin-1.7.1-x64.msi -Algorithm SHA256
+Get-FileHash .\MigraWin-1.7.2-x64.msi -Algorithm SHA256
 ```
 
-Hash SHA-256 della release 1.7.1:
+Hash SHA-256 della release 1.7.2:
 
 ```text
 Il valore aggiornato è pubblicato anche in SHA256SUMS.txt nella release.
@@ -136,7 +136,7 @@ La voce **n8n** include l'installazione npm attiva, i wrapper CLI, database e fi
 - Sono fuori perimetro WSL, container Docker e macchine virtuali.
 - Windows 10 e Windows ARM64 non sono dichiarati supportati.
 - La scansione automatica degli script copre la radice del profilo e gli strumenti noti, non ogni progetto annidato nel disco.
-- La release 1.7.1 non è firmata con un certificato Authenticode.
+- La release 1.7.2 non è firmata con un certificato Authenticode.
 
 ## Sviluppo e collaudo
 

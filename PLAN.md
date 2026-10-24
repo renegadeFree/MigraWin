@@ -58,6 +58,7 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] La scheda n8n verifica la presenza del processo nel dump PM2 senza assumerne l'esistenza.
 - [x] n8n porta attivo il backup del package installato e include database/WAL, storage e nodi personalizzati.
 - [x] Configurazione n8n spostata nel componente impostazioni e profilo completo esteso agli strumenti personali installati.
+- [x] Rilevato e descritto l'avvio n8n tramite `avvia_n8n.vbs`, mantenendo il ripristino come file non eseguito automaticamente.
 
 ## Collaudi eseguiti
 
