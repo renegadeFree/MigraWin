@@ -166,3 +166,13 @@ In **Impostazioni → Aggiornamenti** puoi controllare l'ultima release pubblica
 **Scarica e installa** richiede una conferma, scarica l'MSI, verifica SHA-256 usando `SHA256SUMS.txt` e avvia l'installer di Windows. Il download incompleto o con hash diverso viene eliminato.
 
 Il pacchetto verificato viene conservato in `Downloads\MigraWinUpdates`, così Windows Installer può accedervi anche quando l'app è avviata con un token limitato.
+
+## 12. Impostazioni globali
+
+In **Impostazioni → Backup predefinito** puoi stabilire quali componenti vengono preselezionati per le applicazioni di ogni nuova analisi e per i programmi portabili aggiunti:
+
+- impostazioni e configurazioni di base;
+- dati, progetti e cartelle personali;
+- copia archivistica dei file installati.
+
+Le scelte vengono salvate in `%LOCALAPPDATA%\MigraWin\settings.json`. Sono valori iniziali: puoi ancora deselezionare un componente nella singola applicazione, ma la successiva analisi riapplica i predefiniti. Il profilo **Completo supportato** rispetta l'opzione sui file installati. La copia dei file installati può richiedere molto spazio.

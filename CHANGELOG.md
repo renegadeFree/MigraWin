@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8.0 — 24 ottobre 2026
+
+- aggiunti predefiniti globali persistenti per impostazioni, dati e file installati;
+- i predefiniti vengono applicati a ogni nuova analisi e ai programmi portabili aggiunti;
+- il profilo Completo supportato rispetta l'opzione globale sui file installati;
+- configurazione salvata in `%LOCALAPPDATA%\MigraWin\settings.json`.
+
 ## 1.7.2 — 24 ottobre 2026
 
 - riconoscimento esplicito dell'avvio n8n tramite `avvia_n8n.vbs`;

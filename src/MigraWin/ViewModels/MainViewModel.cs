@@ -83,6 +83,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private readonly LocalSecretStore _localSecretStore = new();
     private readonly ScheduleService _scheduleService = new();
     private readonly ApplicationArtworkService _artworkService = new();
+    private readonly AppSettingsStore _settingsStore = new();
     private readonly DialogService _dialogs = new();
     private RepositorySession? _repository;
     private CancellationTokenSource? _operationCancellation;
@@ -125,6 +126,9 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private int _themeChoiceIndex;
     private bool _includeStoreApps = true;
     private bool _includePersonalScripts = true;
+    private bool _defaultBackupSettings = true;
+    private bool _defaultBackupData = true;
+    private bool _defaultBackupInstalledFiles = true;
     private int _retentionChoiceIndex;
     private bool _scheduleEnabled;
     private string _scheduleTime = "03:00";
@@ -655,6 +659,42 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         set => SetProperty(ref _includePersonalScripts, value);
     }
 
+    public bool DefaultBackupSettings
+    {
+        get => _defaultBackupSettings;
+        set
+        {
+            if (SetProperty(ref _defaultBackupSettings, value))
+            {
+                _ = SaveBackupDefaultsAsync();
+            }
+        }
+    }
+
+    public bool DefaultBackupData
+    {
+        get => _defaultBackupData;
+        set
+        {
+            if (SetProperty(ref _defaultBackupData, value))
+            {
+                _ = SaveBackupDefaultsAsync();
+            }
+        }
+    }
+
+    public bool DefaultBackupInstalledFiles
+    {
+        get => _defaultBackupInstalledFiles;
+        set
+        {
+            if (SetProperty(ref _defaultBackupInstalledFiles, value))
+            {
+                _ = SaveBackupDefaultsAsync();
+            }
+        }
+    }
+
     public int RetentionChoiceIndex
     {
         get => _retentionChoiceIndex;
@@ -753,6 +793,13 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         }
 
         _initialized = true;
+        var backupDefaults = await _settingsStore.LoadAsync();
+        _defaultBackupSettings = backupDefaults.IncludeSettings;
+        _defaultBackupData = backupDefaults.IncludeData;
+        _defaultBackupInstalledFiles = backupDefaults.IncludeInstalledFiles;
+        OnPropertyChanged(nameof(DefaultBackupSettings));
+        OnPropertyChanged(nameof(DefaultBackupData));
+        OnPropertyChanged(nameof(DefaultBackupInstalledFiles));
         ThemeManager.Apply(ThemePreference.System);
         await _historyStore.InitializeAsync();
         foreach (var activity in await _historyStore.LoadRecentAsync())
@@ -792,6 +839,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
             Applications.Clear();
             foreach (var application in inventory)
             {
+                ApplyBackupDefaults(application);
                 application.PropertyChanged += ApplicationOnPropertyChanged;
                 Applications.Add(application);
             }
@@ -850,6 +898,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
             IsSelected = true
         };
         application.CustomDataRoots.Add(directory);
+        ApplyBackupDefaults(application);
         application.PropertyChanged += ApplicationOnPropertyChanged;
         Applications.Add(application);
         SelectedApplication = application;
@@ -912,7 +961,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
                     application.BackupInstaller = application.HasInstaller;
                     application.BackupSettings = application.HasSettings;
                     application.BackupData = application.HasData;
-                    application.BackupInstalledFiles = application.Source == "Script personale"
+                    application.BackupInstalledFiles = DefaultBackupInstalledFiles
                                                        && application.HasInstalledFiles;
                     break;
             }
@@ -2077,6 +2126,31 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private void RefreshApplicationsView()
     {
         ApplicationsView.Refresh();
+    }
+
+    private void ApplyBackupDefaults(InstalledApplication application) =>
+        new BackupDefaults
+        {
+            IncludeSettings = DefaultBackupSettings,
+            IncludeData = DefaultBackupData,
+            IncludeInstalledFiles = DefaultBackupInstalledFiles
+        }.ApplyTo(application);
+
+    private async Task SaveBackupDefaultsAsync()
+    {
+        try
+        {
+            await _settingsStore.SaveAsync(new BackupDefaults
+            {
+                IncludeSettings = DefaultBackupSettings,
+                IncludeData = DefaultBackupData,
+                IncludeInstalledFiles = DefaultBackupInstalledFiles
+            });
+        }
+        catch (Exception exception)
+        {
+            StatusText = "Impostazioni non salvate: " + exception.Message;
+        }
     }
 
     private void ApplicationOnPropertyChanged(object? sender, PropertyChangedEventArgs eventArgs)

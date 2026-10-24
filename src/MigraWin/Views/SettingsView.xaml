@@ -28,6 +28,22 @@
 
             <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
                 <StackPanel>
+                    <TextBlock Text="Backup predefinito" Style="{StaticResource SubtitleText}" />
+                    <TextBlock Text="Questi valori vengono applicati a ogni nuova analisi e ai programmi portabili aggiunti; il profilo Completo supportato li rispetta. Le modifiche manuali nella singola applicazione restano valide fino alla scansione successiva."
+                               Style="{StaticResource MutedText}" Margin="0,4,0,14" />
+                    <CheckBox Content="Impostazioni e configurazioni di base"
+                              IsChecked="{Binding DefaultBackupSettings}" Margin="0,0,0,10" />
+                    <CheckBox Content="Dati, progetti e cartelle personali"
+                              IsChecked="{Binding DefaultBackupData}" Margin="0,0,0,10" />
+                    <CheckBox Content="Copia archivistica dei file installati"
+                              IsChecked="{Binding DefaultBackupInstalledFiles}" />
+                    <TextBlock Text="La copia dei file installati può occupare molto spazio, soprattutto per applicazioni e strumenti Node.js."
+                               Style="{StaticResource CaptionText}" TextWrapping="Wrap" Margin="24,6,0,0" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                <StackPanel>
                     <TextBlock Text="Aspetto" Style="{StaticResource SubtitleText}" />
                     <TextBlock Text="Il tema segue Windows per impostazione iniziale; le risorse ad alto contrasto hanno precedenza."
                                Style="{StaticResource MutedText}" Margin="0,4,0,12" />

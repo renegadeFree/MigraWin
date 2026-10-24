@@ -351,6 +351,36 @@ try
     var storedProfiles = await profiles.LoadAsync();
     Assert(storedProfiles.Count == 1 && storedProfiles[0].Name == "Profilo test", "Il profilo deve essere ripristinato.");
 
+    var settingsStore = new AppSettingsStore(Path.Combine(root, "settings.json"));
+    await settingsStore.SaveAsync(new BackupDefaults
+    {
+        IncludeSettings = false,
+        IncludeData = true,
+        IncludeInstalledFiles = false
+    });
+    var storedDefaults = await settingsStore.LoadAsync();
+    Assert(!storedDefaults.IncludeSettings
+           && storedDefaults.IncludeData
+           && !storedDefaults.IncludeInstalledFiles,
+        "I predefiniti globali devono sopravvivere alla riapertura.");
+    var defaultsApplication = new InstalledApplication
+    {
+        InstallationId = "defaults-test",
+        ProductId = "defaults-product",
+        DisplayName = "Applicazione predefinita",
+        InstallLocation = source,
+        BackupSettings = false,
+        BackupData = false,
+        BackupInstalledFiles = false
+    };
+    defaultsApplication.SettingsRoots.Add(source);
+    defaultsApplication.DataRoots.Add(source);
+    storedDefaults.ApplyTo(defaultsApplication);
+    Assert(!defaultsApplication.BackupSettings
+           && defaultsApplication.BackupData
+           && !defaultsApplication.BackupInstalledFiles,
+        "I predefiniti globali devono essere applicati senza forzare componenti disattivati.");
+
     var history = new HistoryStore(Path.Combine(root, "history.db"));
     await history.InitializeAsync();
     await history.RecordAsync(DateTimeOffset.Now, "Test", "Cronologia persistente", "success");
