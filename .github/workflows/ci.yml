@@ -1,0 +1,90 @@
+name: Windows CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-install:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Automated tests
+        shell: pwsh
+        run: dotnet run --project tests\MigraWin.Tests\MigraWin.Tests.csproj -c Release
+
+      - name: Build MSI
+        shell: pwsh
+        run: .\build.ps1
+
+      - name: Install on clean Windows runner
+        shell: pwsh
+        run: |
+          $msi = Get-ChildItem "artifacts\installer\MigraWin-*-x64.msi" |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1 -ExpandProperty FullName
+          if (-not $msi) {
+            throw "MSI non trovato."
+          }
+
+          $log = Join-Path $env:RUNNER_TEMP "migrawin-install.log"
+          $install = Start-Process msiexec.exe -Wait -PassThru -ArgumentList @(
+            "/i", "`"$msi`"", "/qn", "/norestart", "/l*v", "`"$log`""
+          )
+          if ($install.ExitCode -ne 0) {
+            Get-Content -LiteralPath $log -Tail 200
+            throw "Installazione MSI non riuscita: $($install.ExitCode)"
+          }
+
+          $exe = Join-Path $env:LOCALAPPDATA "Programs\MigraWin\MigraWin.exe"
+          $shortcut = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\MigraWin\MigraWin.lnk"
+          if (-not (Test-Path -LiteralPath $exe)) {
+            throw "Eseguibile installato non trovato."
+          }
+          if (-not (Test-Path -LiteralPath $shortcut)) {
+            throw "Collegamento Start non trovato."
+          }
+
+          $maintenance = Start-Process -FilePath $exe `
+            -ArgumentList "--remove-schedules" `
+            -WindowStyle Hidden `
+            -Wait `
+            -PassThru
+          if ($maintenance.ExitCode -ne 0) {
+            throw "Self-check dell'eseguibile installato non riuscito: $($maintenance.ExitCode)"
+          }
+
+          $uninstall = Start-Process msiexec.exe -Wait -PassThru -ArgumentList @(
+            "/x", "`"$msi`"", "/qn", "/norestart", "/l*v", "`"$log.uninstall`""
+          )
+          if ($uninstall.ExitCode -ne 0) {
+            throw "Disinstallazione MSI non riuscita: $($uninstall.ExitCode)"
+          }
+          if (Test-Path -LiteralPath (Split-Path $exe)) {
+            throw "La cartella di installazione non è stata rimossa."
+          }
+          if (Test-Path -LiteralPath $shortcut) {
+            throw "Il collegamento Start non è stato rimosso."
+          }
+
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
+        with:
+          name: MigraWin-MSI
+          path: |
+            artifacts/installer/*.msi
+            artifacts/installer/SHA256SUMS.txt
