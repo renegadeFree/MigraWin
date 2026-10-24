@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.0 — 24 ottobre 2026
+
+- rilevamento automatico di script personali nella cartella utente;
+- riconoscimento di Enter for rename, PM2, n8n, Pi Agent e del proxy DeepSeek per Codex;
+- inclusione selettiva di script, configurazioni, database e profili locali con protezione predefinita dei segreti;
+- nuova icona MigraWin ispirata alla migrazione tra due ambienti, con forme essenziali e leggibilità alle dimensioni Windows.
+
 ## 1.5.0 — 24 ottobre 2026
 
 - aggiunte le icone delle applicazioni nell'inventario, estratte da eseguibili, file ICO e manifest MSIX;

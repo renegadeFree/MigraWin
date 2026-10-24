@@ -6,7 +6,7 @@
 
 [![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
 
-[Scarica MigraWin 1.5.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.5.0/MigraWin-1.5.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
+[Scarica MigraWin 1.6.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.6.0/MigraWin-1.6.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
 
 [![Panoramica di MigraWin](docs/images/panoramica.png)](docs/images/panoramica.png)
 
@@ -20,7 +20,7 @@ Non è un clone del disco e non reinstalla Windows. È uno strumento locale, sen
 
 ## Obiettivi
 
-- **Rendere visibile l'installato**: raccogliere applicazioni del Registro Windows, a 32 e 64 bit, e pacchetti Microsoft Store/MSIX.
+- **Rendere visibile l'installato**: raccogliere applicazioni del Registro Windows, pacchetti Microsoft Store/MSIX e script personali.
 - **Evitare copie indiscriminate**: scegliere per ogni applicazione solo le componenti utili.
 - **Proteggere il trasferimento**: cifrare i contenuti, verificare l'integrità e permettere il recupero senza dipendere da un'unica password.
 - **Ripristinare con controllo**: applicare mappature dei percorsi, gestire i conflitti e conservare una copia di rollback.
@@ -52,6 +52,8 @@ Cerca per nome, produttore o versione e riconosci ogni applicazione dalla sua ic
 
 [![Inventario applicazioni in MigraWin](docs/images/inventario.png)](docs/images/inventario.png)
 
+Il filtro **Script personali** raccoglie gli script eseguiti dalla cartella utente e gli strumenti locali riconosciuti, tra cui Enter for rename, PM2, n8n, Pi Agent e il proxy DeepSeek per Codex.
+
 ### Backup leggibile prima di essere avviato
 
 Il profilo di contenuto, la destinazione, la modalità incrementale e la conservazione restano scelte separate. Prima del salvataggio, MigraWin verifica manifest, hash e integrità degli oggetti.
@@ -69,6 +71,7 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 | Area | Cosa offre |
 | --- | --- |
 | Inventario | Registro Windows a 32/64 bit, Store/MSIX, ricerca, filtri, selezione multipla e applicazioni portabili |
+| Script personali | Rilevamento di script `.ps1`, `.cmd`, `.bat`, `.vbs`, `.py`, `.js`, `.mjs` e `.cjs` nella cartella utente |
 | Schede applicazione | Icona locale, versione, collegamento ufficiale e galleria di immagini prodotto |
 | Selezione | Componenti per applicazione, cartelle dati aggiuntive, esclusioni persistenti e profili importabili/esportabili |
 | Backup | Copia completa, incrementale o differenziale con deduplicazione |
@@ -83,21 +86,17 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 
 Requisiti: **Windows 11 x64**.
 
-1. Scarica [MigraWin 1.5.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.5.0/MigraWin-1.5.0-x64.msi).
+1. Scarica [MigraWin 1.6.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.6.0/MigraWin-1.6.0-x64.msi).
 2. Apri l'MSI. L'installazione avviene per l'utente corrente e non richiede privilegi amministrativi.
 3. Avvia MigraWin dal menu Start.
 
 Puoi verificare il download:
 
 ```powershell
-Get-FileHash .\MigraWin-1.5.0-x64.msi -Algorithm SHA256
+Get-FileHash .\MigraWin-1.6.0-x64.msi -Algorithm SHA256
 ```
 
-Hash SHA-256 della release 1.5.0:
-
-```text
-7829A41B7A7191410FB16B52D9D10A64F5159FBD2D9F8391FDC68BF2B5FE1678
-```
+Il checksum SHA-256 ufficiale è pubblicato accanto all'installer: [SHA256SUMS.txt](https://github.com/renegadeFree/MigraWin/releases/download/v1.6.0/SHA256SUMS.txt).
 
 > **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.
 
@@ -106,6 +105,7 @@ Hash SHA-256 della release 1.5.0:
 - I dati restano sul PC: non ci sono account, cloud o telemetria.
 - La password non viene salvata nei profili; dal secondo accesso serve la password oppure la chiave di recupero.
 - Le configurazioni che possono contenere token o password sono escluse per impostazione predefinita.
+- Gli script personali vengono letti e archiviati come file; MigraWin non li esegue durante la scansione.
 - Le credenziali delle applicazioni non vengono estratte automaticamente.
 - Le immagini promozionali vengono richieste solo quando si apre la scheda di un'app con sito ufficiale disponibile.
 - Gli archivi importati sono controllati contro percorsi malevoli, traversal e collegamenti simbolici.
@@ -117,6 +117,8 @@ Il catalogo riconosce configurazioni specifiche per Visual Studio Code, Windows 
 
 Essere riconosciuta non significa che ogni dato possa essere trasferito automaticamente. Le prove end-to-end più estese riguardano Git e Notepad++; per le altre applicazioni il livello effettivo è mostrato nell'inventario. Le applicazioni non riconosciute possono comunque essere archiviate tramite cartelle esplicite.
 
+Per gli script personali vengono riconosciuti in modo specifico Enter for rename, PM2, n8n, Pi Agent e il proxy DeepSeek per Codex. Gli altri script eseguibili nella radice della cartella utente vengono elencati singolarmente; cartelle di progetto profonde possono essere aggiunte manualmente.
+
 ## Limiti e perimetro
 
 - Non crea immagini del disco e non clona Windows.
@@ -125,7 +127,8 @@ Essere riconosciuta non significa che ogni dato possa essere trasferito automati
 - I giochi non vengono inclusi automaticamente.
 - Sono fuori perimetro WSL, container Docker e macchine virtuali.
 - Windows 10 e Windows ARM64 non sono dichiarati supportati.
-- La release 1.5.0 non è firmata con un certificato Authenticode.
+- La scansione automatica degli script copre la radice del profilo e gli strumenti noti, non ogni progetto annidato nel disco.
+- La release 1.6.0 non è firmata con un certificato Authenticode.
 
 ## Sviluppo e collaudo
 

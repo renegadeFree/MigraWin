@@ -124,6 +124,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private BackupProfile? _selectedProfile;
     private int _themeChoiceIndex;
     private bool _includeStoreApps = true;
+    private bool _includePersonalScripts = true;
     private int _retentionChoiceIndex;
     private bool _scheduleEnabled;
     private string _scheduleTime = "03:00";
@@ -648,6 +649,12 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         set => SetProperty(ref _includeStoreApps, value);
     }
 
+    public bool IncludePersonalScripts
+    {
+        get => _includePersonalScripts;
+        set => SetProperty(ref _includePersonalScripts, value);
+    }
+
     public int RetentionChoiceIndex
     {
         get => _retentionChoiceIndex;
@@ -780,6 +787,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         {
             var inventory = await _inventoryService.ScanAsync(
                 IncludeStoreApps,
+                IncludePersonalScripts,
                 _operationCancellation!.Token);
             Applications.Clear();
             foreach (var application in inventory)
@@ -2060,6 +2068,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
             2 => application.SupportLevel == SupportLevel.Detected,
             3 => application.IsGame,
             4 => application.IsSelected,
+            5 => application.Source == "Script personale",
             _ => true
         };
     }

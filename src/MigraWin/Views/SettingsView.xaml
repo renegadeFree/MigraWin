@@ -47,6 +47,10 @@
                               IsChecked="{Binding IncludeStoreApps}" Margin="0,14,0,7" />
                     <TextBlock Text="La scansione legge metadati dei pacchetti installati. Non avvia programmi, script o installer."
                                Style="{StaticResource MutedText}" />
+                    <CheckBox Content="Includi script e strumenti personali"
+                              IsChecked="{Binding IncludePersonalScripts}" Margin="0,12,0,7" />
+                    <TextBlock Text="Rileva script nella cartella utente e strumenti locali come PM2, n8n, Pi Agent e proxy Codex. I processi non vengono avviati."
+                               Style="{StaticResource MutedText}" />
                 </StackPanel>
             </Border>
 

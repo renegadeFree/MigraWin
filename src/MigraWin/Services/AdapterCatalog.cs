@@ -11,7 +11,8 @@ public sealed record ApplicationAdapter(
     string Match,
     string OfficialUrl,
     IReadOnlyList<SourceSpec> Settings,
-    IReadOnlyList<SourceSpec> Data);
+    IReadOnlyList<SourceSpec> Data,
+    SupportLevel Support = SupportLevel.OnlineReinstall);
 
 public static partial class AdapterCatalog
 {
@@ -57,7 +58,51 @@ public static partial class AdapterCatalog
         new("sublime", "Sublime Text", "Sublime Text",
             "https://www.sublimetext.com/download",
             [new(@"%APPDATA%\Sublime Text\Packages\User", ["**"])],
-            [])
+            []),
+        new("personal-enter-rename", "Enter for rename", @"^Enter for rename(?:\s|$)",
+            "https://nilesoft.org/",
+            [new(@"%ProgramFiles%\Nilesoft Shell\imports\file-manage.nss"),
+             new(@"%ProgramFiles%\Nilesoft Shell\imports\scripts\NewFolderWithSelection.ps1"),
+             new(@"%USERPROFILE%\shell.nss")],
+            []),
+        new("personal-pm2", "PM2", @"^PM2(?:\s|$)",
+            "https://pm2.keymetrics.io/",
+            [],
+            [new(@"%APPDATA%\npm\pm2"),
+             new(@"%APPDATA%\npm\pm2.cmd"),
+             new(@"%APPDATA%\npm\pm2.ps1"),
+             new(@"%USERPROFILE%\startmenu_backup_pm2.js"),
+             new(@"%USERPROFILE%\.pm2",
+                 ["dump.pm2", "dump.pm2.bak", "module_conf.json"], true)]),
+        new("personal-n8n", "n8n", @"^n8n(?:\s|$)",
+            "https://n8n.io/",
+            [],
+            [new(@"%APPDATA%\npm\n8n"),
+             new(@"%APPDATA%\npm\n8n.cmd"),
+             new(@"%APPDATA%\npm\n8n.ps1"),
+             new(@"%USERPROFILE%\n8n-config.js"),
+             new(@"%USERPROFILE%\avvia_n8n.vbs"),
+             new(@"%USERPROFILE%\.n8n",
+                 ["config", "database.sqlite", "database.sqlite-shm", "database.sqlite-wal",
+                  "storage/**", "nodes/package.json", "nodes/package-lock.json"], true)]),
+        new("personal-pi-agent", "Pi Agent", @"^Pi Agent(?:\s|$)",
+            "https://github.com/earendil-works/pi",
+            [],
+            [new(@"%APPDATA%\npm\pi"),
+             new(@"%APPDATA%\npm\pi.cmd"),
+             new(@"%APPDATA%\npm\pi.ps1"),
+             new(@"%USERPROFILE%\.pi\agent",
+                 ["settings.json", "models.json", "models-store.json"], true)]),
+        new("personal-codex-proxy", "Proxy DeepSeek per Codex", @"^Proxy DeepSeek per Codex(?:\s|$)",
+            string.Empty,
+            [],
+            [new(@"%USERPROFILE%\.codex\proxy\codex-proxy.py"),
+             new(@"%USERPROFILE%\.codex\proxy\lmstudio-sync.py"),
+             new(@"%USERPROFILE%\.codex\proxy\base-catalog.json"),
+             new(@"%USERPROFILE%\.codex\proxy\lmstudio-generated.json"),
+             new(@"%USERPROFILE%\.codex\proxy\lmstudio-map.json"),
+             new(@"%USERPROFILE%\.codex\deepseek.config.toml", null, true)],
+            SupportLevel.Archivable),
     ];
 
     public static ApplicationAdapter? Find(string name, string publisher, string installLocation)
@@ -82,9 +127,9 @@ public static partial class AdapterCatalog
             app.ProductUrl = adapter.OfficialUrl;
         }
 
-        if (app.SupportLevel < SupportLevel.OnlineReinstall)
+        if (app.SupportLevel < adapter.Support)
         {
-            app.SupportLevel = SupportLevel.OnlineReinstall;
+            app.SupportLevel = adapter.Support;
         }
     }
 

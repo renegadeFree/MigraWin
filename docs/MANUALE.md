@@ -4,6 +4,8 @@
 
 Apri **Inventario** e scegli **Analizza PC**. MigraWin legge il registro delle disinstallazioni e, se abilitati, i metadati dei pacchetti Microsoft Store/MSIX. La scansione non avvia installer, script o programmi trovati.
 
+Con **Includi script e strumenti personali** attivo, la scansione cerca anche script nella radice del profilo utente e riconosce configurazioni locali di Enter for rename, PM2, n8n, Pi Agent e del proxy DeepSeek per Codex. Gli script non vengono eseguiti.
+
 Le applicazioni sono distinte per identità dell'installazione. Controlla sempre nome, produttore, versione, origine e livello di supporto prima di selezionare.
 
 La lista mostra l'icona associata all'eseguibile o al pacchetto installato. Se l'icona non è leggibile, viene mostrato un monogramma; l'assenza dell'immagine non blocca inventario, backup o ripristino.
@@ -21,6 +23,8 @@ Puoi selezionare più applicazioni con le caselle e personalizzare ciascuna dal 
 - cache e file temporanei.
 
 Quando MigraWin dispone di una pagina ufficiale o di una scheda Microsoft Store, il dettaglio mostra **Apri sito ufficiale**. Se la pagina espone un'immagine promozionale, questa compare in una galleria separata con etichetta **Dal sito ufficiale**. Le immagini prodotto non sostituiscono mai l'icona dell'applicazione.
+
+Per n8n arresta il servizio prima del backup, così il database e i file WAL vengono copiati in uno stato coerente. PM2, n8n e Pi Agent includono i file di configurazione necessari; credenziali e configurazioni sensibili restano soggette alla selezione esplicita descritta sotto.
 
 La copia dei file installati non equivale a un installer. Quando un'applicazione contiene possibili credenziali, il componente viene indicato come sensibile.
 

@@ -109,6 +109,61 @@ try
         });
     Assert(onlineArtwork.Count == 1, "L'immagine trovata sul sito ufficiale deve essere caricata nella galleria.");
 
+    var scriptHome = Path.Combine(root, "script-home");
+    var scriptAppData = Path.Combine(root, "script-appdata");
+    var scriptProgramFiles = Path.Combine(root, "script-program-files");
+    Directory.CreateDirectory(scriptHome);
+    Directory.CreateDirectory(Path.Combine(scriptHome, ".n8n"));
+    Directory.CreateDirectory(Path.Combine(scriptHome, ".pm2"));
+    Directory.CreateDirectory(Path.Combine(scriptHome, ".pi", "agent"));
+    Directory.CreateDirectory(Path.Combine(scriptHome, ".codex", "proxy"));
+    Directory.CreateDirectory(Path.Combine(scriptProgramFiles, "Nilesoft Shell", "imports", "scripts"));
+    Directory.CreateDirectory(Path.Combine(scriptAppData, "npm", "node_modules", "pm2"));
+    Directory.CreateDirectory(Path.Combine(scriptAppData, "npm", "node_modules", "n8n"));
+    Directory.CreateDirectory(Path.Combine(
+        scriptAppData, "npm", "node_modules", "@earendil-works", "pi-coding-agent"));
+    await File.WriteAllTextAsync(Path.Combine(scriptHome, "custom-tool.ps1"), "Write-Output 'test'");
+    await File.WriteAllTextAsync(Path.Combine(scriptHome, "n8n-config.js"), "module.exports = {};");
+    await File.WriteAllTextAsync(Path.Combine(scriptHome, "startmenu_backup_pm2.js"), "console.log('test');");
+    await File.WriteAllTextAsync(Path.Combine(scriptHome, ".n8n", "config"), "{}");
+    await File.WriteAllTextAsync(Path.Combine(scriptHome, ".pm2", "dump.pm2"), "[]");
+    await File.WriteAllTextAsync(Path.Combine(scriptHome, ".pi", "agent", "settings.json"), "{}");
+    await File.WriteAllTextAsync(Path.Combine(scriptHome, ".codex", "proxy", "codex-proxy.py"), "print('test')");
+    await File.WriteAllTextAsync(
+        Path.Combine(scriptProgramFiles, "Nilesoft Shell", "imports", "scripts", "NewFolderWithSelection.ps1"),
+        "param()");
+    foreach (var (package, version) in new[] { ("pm2", "6.0.0"), ("n8n", "2.0.0") })
+    {
+        await File.WriteAllTextAsync(
+            Path.Combine(scriptAppData, "npm", "node_modules", package, "package.json"),
+            $$"""{"name":"{{package}}","version":"{{version}}"}""");
+        await File.WriteAllTextAsync(Path.Combine(scriptAppData, "npm", package + ".cmd"), "@echo off");
+    }
+
+    await File.WriteAllTextAsync(
+        Path.Combine(scriptAppData, "npm", "node_modules", "@earendil-works", "pi-coding-agent", "package.json"),
+        """{"name":"@earendil-works/pi-coding-agent","version":"0.87.1"}""");
+    await File.WriteAllTextAsync(Path.Combine(scriptAppData, "npm", "pi.cmd"), "@echo off");
+    var personalTools = new PersonalScriptDiscoveryService(
+            scriptHome,
+            scriptAppData,
+            scriptProgramFiles)
+        .Scan(CancellationToken.None)
+        .ToArray();
+    foreach (var tool in personalTools)
+    {
+        AdapterCatalog.Apply(tool);
+    }
+
+    Assert(new[] { "Enter for rename", "PM2", "n8n", "Pi Agent", "Proxy DeepSeek per Codex", "Custom tool" }
+            .All(name => personalTools.Any(tool => tool.DisplayName == name)),
+        "La scansione deve riconoscere gli strumenti personali noti e gli script nella home.");
+    Assert(personalTools.Single(tool => tool.DisplayName == "n8n").HasData
+           && personalTools.Single(tool => tool.DisplayName == "Custom tool").CustomDataRoots.Count == 1,
+        "Gli strumenti personali devono esporre configurazioni e script al backup.");
+    Assert(personalTools.All(tool => tool.Source == "Script personale"),
+        "Gli strumenti personali devono essere distinti dalle applicazioni installate.");
+
     var backup = new BackupService();
     var (manifest, recoveryKey) = await backup.CreateBackupAsync(
         repositoryPath,

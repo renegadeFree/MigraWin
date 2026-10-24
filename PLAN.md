@@ -46,6 +46,10 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Galleria separata delle immagini promozionali dal sito ufficiale, senza sostituire l'icona.
 - [x] Collegamento a sito ufficiale o scheda Microsoft Store quando disponibile.
 - [x] Nuova icona originale vettoriale, esportata in più dimensioni per Windows.
+- [x] Identità v1.6.0 semplificata secondo le linee guida Microsoft e Apple per icone leggibili a 16 px.
+- [x] Rilevamento di script personali nella radice del profilo utente con filtro dedicato.
+- [x] Riconoscimento end-to-end dei percorsi per Enter for rename, PM2, n8n, Pi Agent e proxy DeepSeek per Codex.
+- [x] Inclusione selettiva di configurazioni e database locali, mantenendo l'esclusione predefinita dei segreti.
 
 ## Collaudi eseguiti
 

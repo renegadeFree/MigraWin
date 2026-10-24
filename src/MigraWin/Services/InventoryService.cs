@@ -9,6 +9,8 @@ namespace MigraWin.Services;
 
 public sealed class InventoryService
 {
+    private readonly PersonalScriptDiscoveryService _personalScripts = new();
+
     private static readonly string[] GameMarkers =
     [
         "steam", "epic games", "battle.net", "riot client", "riot games", "ubisoft connect",
@@ -17,8 +19,14 @@ public sealed class InventoryService
 
     public event Action<string>? StatusChanged;
 
+    public Task<IReadOnlyList<InstalledApplication>> ScanAsync(
+        bool includeStoreApps,
+        CancellationToken cancellationToken = default) =>
+        ScanAsync(includeStoreApps, includePersonalScripts: true, cancellationToken: cancellationToken);
+
     public async Task<IReadOnlyList<InstalledApplication>> ScanAsync(
         bool includeStoreApps,
+        bool includePersonalScripts,
         CancellationToken cancellationToken = default)
     {
         StatusChanged?.Invoke("Lettura del registro delle applicazioni…");
@@ -27,6 +35,14 @@ public sealed class InventoryService
         {
             StatusChanged?.Invoke("Lettura delle applicazioni Microsoft Store…");
             apps.AddRange(await ScanStoreAppsAsync(cancellationToken));
+        }
+
+        if (includePersonalScripts)
+        {
+            StatusChanged?.Invoke("Ricerca di script e strumenti personali…");
+            apps.AddRange(await Task.Run(
+                () => _personalScripts.Scan(cancellationToken),
+                cancellationToken));
         }
 
         foreach (var app in apps)
