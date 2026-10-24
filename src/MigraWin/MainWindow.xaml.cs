@@ -21,6 +21,14 @@ public partial class MainWindow : Window
     private async void Window_OnLoaded(object sender, RoutedEventArgs e) =>
         await _viewModel.InitializeAsync();
 
+    private void Window_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var compact = e.NewSize.Width < 1100;
+        NavigationColumn.Width = new GridLength(compact ? 76 : 238);
+        SidebarFooter.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
+        _viewModel.IsCompactNavigation = compact;
+    }
+
     private async void Window_OnClosed(object? sender, EventArgs e)
     {
         ThemeManager.ThemeChanged -= ThemeManager_OnThemeChanged;

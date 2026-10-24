@@ -3,7 +3,7 @@
   <Package
       Name="MigraWin"
       Manufacturer="Paolo"
-      Version="1.4.2"
+      Version="1.4.3"
       UpgradeCode="CC4C6A0F-EEDE-46CF-BC59-77519C9E48E3"
       Scope="perUser"
       Compressed="yes"

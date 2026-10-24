@@ -3,17 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:MigraWin.Views"
         Title="MigraWin"
-        Width="1360" Height="860" MinWidth="1220" MinHeight="700"
+        Width="1360" Height="860" MinWidth="820" MinHeight="540"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource AppWindowBrush}"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
         ThemeMode="System"
         Loaded="Window_OnLoaded"
+        SizeChanged="Window_OnSizeChanged"
         Closed="Window_OnClosed">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="238" />
+            <ColumnDefinition x:Name="NavigationColumn" Width="238" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -36,7 +37,8 @@
                                    FontWeight="SemiBold" FontSize="12"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0"
+                                Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}">
                         <TextBlock Text="MigraWin" FontSize="17" FontWeight="SemiBold"
                                    Foreground="{DynamicResource AppTextPrimaryBrush}" />
                         <TextBlock Text="Backup e migrazione" Style="{StaticResource CaptionText}" />
@@ -44,62 +46,71 @@
                 </Grid>
                 <ListBox Grid.Row="1" Style="{StaticResource NavList}"
                          SelectedIndex="{Binding NavigationIndex, Mode=TwoWay}">
-                    <ListBoxItem AutomationProperties.Name="Panoramica">
+                    <ListBoxItem AutomationProperties.Name="Panoramica" ToolTip="Panoramica">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE80F;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Panoramica" VerticalAlignment="Center" />
+                            <TextBlock Text="Panoramica" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Inventario">
+                    <ListBoxItem AutomationProperties.Name="Inventario" ToolTip="Inventario">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE8F1;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Inventario" VerticalAlignment="Center" />
+                            <TextBlock Text="Inventario" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Backup">
+                    <ListBoxItem AutomationProperties.Name="Backup" ToolTip="Backup">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE896;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Backup" VerticalAlignment="Center" />
+                            <TextBlock Text="Backup" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Archivio">
+                    <ListBoxItem AutomationProperties.Name="Archivio" ToolTip="Archivio">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE8B7;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Archivio" VerticalAlignment="Center" />
+                            <TextBlock Text="Archivio" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Confronto">
+                    <ListBoxItem AutomationProperties.Name="Confronto" ToolTip="Confronto">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE8AB;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Confronto" VerticalAlignment="Center" />
+                            <TextBlock Text="Confronto" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Ripristino">
+                    <ListBoxItem AutomationProperties.Name="Ripristino" ToolTip="Ripristino">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE777;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Ripristino" VerticalAlignment="Center" />
+                            <TextBlock Text="Ripristino" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Pacchetti">
+                    <ListBoxItem AutomationProperties.Name="Pacchetti" ToolTip="Pacchetti">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE7B8;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Pacchetti" VerticalAlignment="Center" />
+                            <TextBlock Text="Pacchetti" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Attività">
+                    <ListBoxItem AutomationProperties.Name="Attività" ToolTip="Attività">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE9D9;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Attività" VerticalAlignment="Center" />
+                            <TextBlock Text="Attività" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem AutomationProperties.Name="Impostazioni">
+                    <ListBoxItem AutomationProperties.Name="Impostazioni" ToolTip="Impostazioni">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE713;" Style="{StaticResource SymbolText}" Margin="0,0,12,0" />
-                            <TextBlock Text="Impostazioni" VerticalAlignment="Center" />
+                            <TextBlock Text="Impostazioni" VerticalAlignment="Center"
+                                       Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}" />
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>
-                <Border Grid.Row="2" Margin="16" Padding="12"
+                <Border x:Name="SidebarFooter" Grid.Row="2" Margin="16" Padding="12"
                         BorderBrush="{DynamicResource AppStrokeBrush}" BorderThickness="1"
                         CornerRadius="8" Background="{DynamicResource AppSurfaceAltBrush}">
                     <StackPanel>
@@ -145,17 +156,23 @@
                          IsIndeterminate="{Binding IsProgressIndeterminate}"
                          Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
 
-            <Grid Grid.Row="2" Background="{DynamicResource AppWindowBrush}">
-                <views:OverviewView Visibility="{Binding IsOverviewPage, Converter={StaticResource BoolToVisibility}}" />
-                <views:InventoryView Visibility="{Binding IsInventoryPage, Converter={StaticResource BoolToVisibility}}" />
-                <views:BackupView Visibility="{Binding IsBackupPage, Converter={StaticResource BoolToVisibility}}" />
-                <views:ArchiveView Visibility="{Binding IsArchivePage, Converter={StaticResource BoolToVisibility}}" />
-                <views:ComparisonView Visibility="{Binding IsComparisonPage, Converter={StaticResource BoolToVisibility}}" />
-                <views:RestoreView Visibility="{Binding IsRestorePage, Converter={StaticResource BoolToVisibility}}" />
-                <views:PackagesView Visibility="{Binding IsPackagesPage, Converter={StaticResource BoolToVisibility}}" />
-                <views:ActivityView Visibility="{Binding IsActivityPage, Converter={StaticResource BoolToVisibility}}" />
-                <views:SettingsView Visibility="{Binding IsSettingsPage, Converter={StaticResource BoolToVisibility}}" />
-            </Grid>
+            <ScrollViewer Grid.Row="2"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled"
+                          HorizontalContentAlignment="Stretch"
+                          Background="{DynamicResource AppWindowBrush}">
+                <Grid MinWidth="840">
+                    <views:OverviewView Visibility="{Binding IsOverviewPage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:InventoryView Visibility="{Binding IsInventoryPage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:BackupView Visibility="{Binding IsBackupPage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:ArchiveView Visibility="{Binding IsArchivePage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:ComparisonView Visibility="{Binding IsComparisonPage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:RestoreView Visibility="{Binding IsRestorePage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:PackagesView Visibility="{Binding IsPackagesPage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:ActivityView Visibility="{Binding IsActivityPage, Converter={StaticResource BoolToVisibility}}" />
+                    <views:SettingsView Visibility="{Binding IsSettingsPage, Converter={StaticResource BoolToVisibility}}" />
+                </Grid>
+            </ScrollViewer>
 
             <Border Grid.Row="3" Background="{DynamicResource AppBaseBrush}"
                     BorderBrush="{DynamicResource AppStrokeBrush}" BorderThickness="0,1,0,0">

@@ -128,6 +128,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private AvailableUpdate? _availableUpdate;
     private string _updateStatus = "Controllo aggiornamenti non ancora eseguito.";
     private bool _isUpdating;
+    private bool _isCompactNavigation;
     private bool _initialized;
 
     public MainViewModel()
@@ -693,7 +694,13 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         }
     }
 
-    public string VersionLabel => "MigraWin 1.4.2 · Windows x64";
+    public bool IsCompactNavigation
+    {
+        get => _isCompactNavigation;
+        set => SetProperty(ref _isCompactNavigation, value);
+    }
+
+    public string VersionLabel => "MigraWin 1.4.3 · Windows x64";
     public string DataDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "MigraWin");

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.3 — 24 ottobre 2026
+
+- barra laterale compatta automatica nelle finestre strette;
+- layout verificato a 820×540 con scorrimento orizzontale di sicurezza;
+- navigazione accessibile tramite icone, tooltip e nomi UI Automation;
+- pipeline di firma Authenticode opzionale integrata nel build e nella release.
+
 ## 1.4.2 — 24 ottobre 2026
 
 - download degli aggiornamenti spostato in `Downloads\MigraWinUpdates`;
