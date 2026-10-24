@@ -8,11 +8,15 @@ Con **Includi script e strumenti personali** attivo, la scansione cerca anche sc
 
 Le applicazioni sono distinte per identità dell'installazione. Controlla sempre nome, produttore, versione, origine e livello di supporto prima di selezionare.
 
+### Collegamento Desktop
+
+L'MSI installa MigraWin per l'utente corrente, crea il collegamento nel menu Start e aggiunge **MigraWin** sul Desktop. La disinstallazione rimuove entrambi i collegamenti.
+
+## 2. Selezione e componenti
+
 La lista mostra l'icona associata all'eseguibile o al pacchetto installato. Se l'icona non è leggibile, viene mostrato un monogramma; l'assenza dell'immagine non blocca inventario, backup o ripristino.
 
 Per un software portabile non rilevato, scegli **Aggiungi portabile** e seleziona il relativo eseguibile. La cartella viene proposta come dato da acquisire; nessun programma viene avviato.
-
-## 2. Selezione e componenti
 
 Puoi selezionare più applicazioni con le caselle e personalizzare ciascuna dal pannello di destra:
 

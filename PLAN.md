@@ -50,6 +50,8 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Rilevamento di script personali nella radice del profilo utente con filtro dedicato.
 - [x] Riconoscimento end-to-end dei percorsi per Enter for rename, PM2, n8n, Pi Agent e proxy DeepSeek per Codex.
 - [x] Inclusione selettiva di configurazioni e database locali, mantenendo l'esclusione predefinita dei segreti.
+- [x] Icona fornita dall'utente integrata come sorgente immutata e convertita in ICO multi-risoluzione.
+- [x] Collegamento Desktop creato dall'MSI per l'utente corrente e rimosso alla disinstallazione.
 
 ## Collaudi eseguiti
 

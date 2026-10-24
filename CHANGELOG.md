@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.1 — 24 ottobre 2026
+
+- nuova icona fornita dall'utente, convertita in un ICO multi-risoluzione senza modificarne il simbolo;
+- collegamento MigraWin creato automaticamente sul Desktop durante l'installazione;
+- collaudo CI esteso alla presenza e alla rimozione del collegamento Desktop.
+
 ## 1.6.0 — 24 ottobre 2026
 
 - rilevamento automatico di script personali nella cartella utente;

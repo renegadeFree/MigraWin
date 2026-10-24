@@ -36,6 +36,11 @@
                         Name="MigraWin"
                         Description="Backup e migrazione Windows"
                         WorkingDirectory="INSTALLFOLDER" />
+              <Shortcut Id="ApplicationDesktopShortcut"
+                        Directory="DesktopFolder"
+                        Name="MigraWin"
+                        Description="Backup e migrazione Windows"
+                        WorkingDirectory="INSTALLFOLDER" />
             </File>
             <RegistryValue Root="HKCU"
                            Key="Software\MigraWin"
