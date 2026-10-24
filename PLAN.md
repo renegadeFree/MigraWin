@@ -57,6 +57,7 @@ Ulteriori verifiche effettuate:
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
 - release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.2`;
 - GitHub Action delle release `v1.4.0` e `v1.4.1` completata con esito `success`;
+- CI su runner Windows pulito completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
 - MSI pubblico v1.4.2 scaricato e verificato: 59.682.816 byte, SHA-256 `0E0F97DFFCD2371E904FDB8F0B9303546885B159812A5553DC7F3311C9A59C08`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;

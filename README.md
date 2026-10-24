@@ -1,5 +1,7 @@
 # MigraWin
 
+[![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
+
 MigraWin è un'applicazione desktop Windows per inventariare il software installato, scegliere componenti da conservare, creare un repository cifrato e ripristinare i contenuti su un altro PC.
 
 ## Cosa include questa versione
