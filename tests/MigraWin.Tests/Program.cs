@@ -356,12 +356,14 @@ try
     {
         IncludeSettings = false,
         IncludeData = true,
-        IncludeInstalledFiles = false
+        IncludeInstalledFiles = false,
+        Language = "de"
     });
     var storedDefaults = await settingsStore.LoadAsync();
     Assert(!storedDefaults.IncludeSettings
            && storedDefaults.IncludeData
-           && !storedDefaults.IncludeInstalledFiles,
+           && !storedDefaults.IncludeInstalledFiles
+           && storedDefaults.Language == "de",
         "I predefiniti globali devono sopravvivere alla riapertura.");
     var defaultsApplication = new InstalledApplication
     {
@@ -380,6 +382,27 @@ try
            && defaultsApplication.BackupData
            && !defaultsApplication.BackupInstalledFiles,
         "I predefiniti globali devono essere applicati senza forzare componenti disattivati.");
+    var languageChecks = new Dictionary<string, string>
+    {
+        ["en"] = "Settings",
+        ["zh"] = "设置",
+        ["ja"] = "設定",
+        ["ko"] = "설정",
+        ["es"] = "Configuración",
+        ["tr"] = "Ayarlar",
+        ["ru"] = "Настройки",
+        ["el"] = "Ρυθμίσεις",
+        ["fr"] = "Paramètres",
+        ["de"] = "Einstellungen"
+    };
+    foreach (var (language, expected) in languageChecks)
+    {
+        LocalizationService.SetLanguage(language);
+        Assert(LocalizationService.Translate("Impostazioni") == expected,
+            $"La lingua {language} deve tradurre i comandi principali.");
+    }
+
+    LocalizationService.SetLanguage("it");
 
     var history = new HistoryStore(Path.Combine(root, "history.db"));
     await history.InitializeAsync();

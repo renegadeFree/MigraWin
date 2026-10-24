@@ -8,6 +8,7 @@ public sealed class BackupDefaults
     public bool IncludeSettings { get; set; } = true;
     public bool IncludeData { get; set; } = true;
     public bool IncludeInstalledFiles { get; set; } = true;
+    public string Language { get; set; } = string.Empty;
 
     public void ApplyTo(InstalledApplication application)
     {

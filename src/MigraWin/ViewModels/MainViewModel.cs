@@ -130,12 +130,14 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private bool _defaultBackupData = true;
     private bool _defaultBackupInstalledFiles = true;
     private int _retentionChoiceIndex;
+    private int _languageChoiceIndex = -1;
     private bool _scheduleEnabled;
     private string _scheduleTime = "03:00";
     private string _scheduleStatus = "Nessuna pianificazione configurata.";
     private string _reportText = string.Empty;
     private AvailableUpdate? _availableUpdate;
     private string _updateStatus = "Controllo aggiornamenti non ancora eseguito.";
+    private bool _updateCheckCompleted;
     private bool _isUpdating;
     private bool _isCompactNavigation;
     private bool _initialized;
@@ -290,7 +292,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         }
     }
 
-    public string PageTitle => NavigationIndex switch
+    public string PageTitle => LocalizationService.Translate(NavigationIndex switch
     {
         0 => "Panoramica",
         1 => "Inventario applicazioni",
@@ -302,7 +304,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         7 => "Attività e rapporti",
         8 => "Impostazioni",
         _ => "MigraWin"
-    };
+    });
     public bool IsOverviewPage => NavigationIndex == 0;
     public bool IsInventoryPage => NavigationIndex == 1;
     public bool IsBackupPage => NavigationIndex == 2;
@@ -315,7 +317,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
 
     public string StatusText
     {
-        get => _statusText;
+        get => LocalizationService.Translate(_statusText);
         set => SetProperty(ref _statusText, value);
     }
 
@@ -404,7 +406,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     public bool HasProductImages => SelectedProductImages.Count > 0;
     public string SelectedIconStatus
     {
-        get => _selectedIconStatus;
+        get => LocalizationService.Translate(_selectedIconStatus);
         private set => SetProperty(ref _selectedIconStatus, value);
     }
     public string InstalledCountLabel => Applications.Count.ToString("N0");
@@ -413,7 +415,10 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     public string LastBackupLabel => Snapshots.Count == 0 ? "Nessun backup" : Snapshots[0].DateLabel;
     public string SelectedSizeLabel => InstalledApplication.FormatBytes(
         Applications.Where(application => application.IsSelected).Sum(application => application.EstimatedSize));
-    public string SelectedAppsSummary => $"{SelectedCountLabel} applicazioni · {SelectedSizeLabel} stimati";
+    public string SelectedAppsSummary => LocalizationService.Format(
+        "{0} applicazioni · {1} stimati",
+        SelectedCountLabel,
+        SelectedSizeLabel);
 
     public string ProfileName
     {
@@ -494,30 +499,30 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         {
             if (Applications.Count(application => application.IsSelected) == 0)
             {
-                return "Seleziona almeno un'applicazione nell'inventario.";
+                return LocalizationService.Translate("Seleziona almeno un'applicazione nell'inventario.");
             }
 
             if (BackupPassword.Length < 10)
             {
-                return "La password deve contenere almeno 10 caratteri.";
+                return LocalizationService.Translate("La password deve contenere almeno 10 caratteri.");
             }
 
             if (BackupPassword != BackupPasswordConfirmation)
             {
-                return "Le password non coincidono.";
+                return LocalizationService.Translate("Le password non coincidono.");
             }
 
             if (string.IsNullOrWhiteSpace(BackupDestination))
             {
-                return "Scegli una destinazione.";
+                return LocalizationService.Translate("Scegli una destinazione.");
             }
 
             if (ScheduleEnabled && !TimeOnly.TryParseExact(ScheduleTime, "HH:mm", out _))
             {
-                return "L'orario pianificato deve usare il formato HH:mm.";
+                return LocalizationService.Translate("L'orario pianificato deve usare il formato HH:mm.");
             }
 
-            return "Pronto per la verifica e il backup.";
+            return LocalizationService.Translate("Pronto per la verifica e il backup.");
         }
     }
 
@@ -589,7 +594,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
 
     public string ComparisonSummary
     {
-        get => _comparisonSummary;
+        get => LocalizationService.Translate(_comparisonSummary);
         set => SetProperty(ref _comparisonSummary, value);
     }
 
@@ -607,7 +612,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
 
     public string RestoreAnalysis
     {
-        get => _restoreAnalysis;
+        get => LocalizationService.Translate(_restoreAnalysis);
         set => SetProperty(ref _restoreAnalysis, value);
     }
 
@@ -644,6 +649,25 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
             {
                 ThemeManager.Apply((ThemePreference)value);
             }
+        }
+    }
+
+    public IReadOnlyList<LanguageOption> LanguageOptions => LocalizationService.Languages;
+
+    public int LanguageChoiceIndex
+    {
+        get => _languageChoiceIndex;
+        set
+        {
+            if (value < 0
+                || value >= LanguageOptions.Count
+                || !SetProperty(ref _languageChoiceIndex, value))
+            {
+                return;
+            }
+
+            LocalizationService.SetLanguage(LanguageOptions[value].Code);
+            _ = SaveBackupDefaultsAsync();
         }
     }
 
@@ -727,7 +751,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
 
     public string ScheduleStatus
     {
-        get => _scheduleStatus;
+        get => LocalizationService.Translate(_scheduleStatus);
         set => SetProperty(ref _scheduleStatus, value);
     }
 
@@ -753,12 +777,12 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
 
     public bool UpdateAvailable => AvailableUpdate is not null;
     public string UpdateVersionLabel => AvailableUpdate is null
-        ? "Nessun aggiornamento disponibile"
-        : $"Versione {AvailableUpdate.Version} disponibile";
+        ? LocalizationService.Translate("Nessun aggiornamento disponibile")
+        : LocalizationService.Format("Versione {0} disponibile", AvailableUpdate.Version);
 
     public string UpdateStatus
     {
-        get => _updateStatus;
+        get => LocalizationService.Translate(_updateStatus);
         private set => SetProperty(ref _updateStatus, value);
     }
 
@@ -794,6 +818,12 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
 
         _initialized = true;
         var backupDefaults = await _settingsStore.LoadAsync();
+        var languageCode = string.IsNullOrWhiteSpace(backupDefaults.Language)
+            ? LocalizationService.DetectSystemLanguage()
+            : backupDefaults.Language;
+        LocalizationService.SetLanguage(languageCode);
+        _languageChoiceIndex = LocalizationService.GetLanguageIndex(LocalizationService.CurrentLanguage);
+        OnPropertyChanged(nameof(LanguageChoiceIndex));
         _defaultBackupSettings = backupDefaults.IncludeSettings;
         _defaultBackupData = backupDefaults.IncludeData;
         _defaultBackupInstalledFiles = backupDefaults.IncludeInstalledFiles;
@@ -819,6 +849,38 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         await CheckForUpdatesAsync(silent: true);
         AddActivity("Pronto", "MigraWin è pronto. Avvia l'analisi per costruire l'inventario.", "info");
         await _historyStore.PruneAsync();
+    }
+
+    public void RefreshLanguage()
+    {
+        OnPropertyChanged(nameof(PageTitle));
+        OnPropertyChanged(nameof(StatusText));
+        OnPropertyChanged(nameof(SelectedIconStatus));
+        OnPropertyChanged(nameof(SelectedAppsSummary));
+        OnPropertyChanged(nameof(BackupReadinessText));
+        OnPropertyChanged(nameof(ComparisonSummary));
+        OnPropertyChanged(nameof(RestoreAnalysis));
+        OnPropertyChanged(nameof(ScheduleStatus));
+        OnPropertyChanged(nameof(UpdateVersionLabel));
+        if (_updateCheckCompleted)
+        {
+            UpdateStatus = AvailableUpdate is null
+                ? LocalizationService.Format(
+                    "MigraWin {0} è aggiornato.",
+                    UpdateService.CurrentVersion)
+                : LocalizationService.Format(
+                    "Disponibile MigraWin {0}. L'installazione richiede una tua conferma.",
+                    AvailableUpdate.Version);
+        }
+
+        OnPropertyChanged(nameof(UpdateStatus));
+        foreach (var application in Applications)
+        {
+            application.RefreshLocalization();
+        }
+
+        ApplicationsView.Refresh();
+        SnapshotsView.Refresh();
     }
 
     public void SetBackupPassword(string password) => BackupPassword = password;
@@ -2024,13 +2086,18 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private async Task CheckForUpdatesAsync(bool silent)
     {
         IsUpdating = true;
-        UpdateStatus = "Controllo delle release GitHub…";
+        UpdateStatus = LocalizationService.Translate("Controllo delle release GitHub…");
         try
         {
             AvailableUpdate = await _updateService.CheckAsync();
             UpdateStatus = AvailableUpdate is null
-                ? $"MigraWin {UpdateService.CurrentVersion} è aggiornato."
-                : $"Disponibile MigraWin {AvailableUpdate.Version}. L'installazione richiede una tua conferma.";
+                ? LocalizationService.Format(
+                    "MigraWin {0} è aggiornato.",
+                    UpdateService.CurrentVersion)
+                : LocalizationService.Format(
+                    "Disponibile MigraWin {0}. L'installazione richiede una tua conferma.",
+                    AvailableUpdate.Version);
+            _updateCheckCompleted = true;
             if (!silent && AvailableUpdate is null)
             {
                 _dialogs.ShowInfo(UpdateStatus, "Aggiornamenti");
@@ -2038,7 +2105,10 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         }
         catch (Exception exception)
         {
-            UpdateStatus = "Controllo aggiornamenti non disponibile: " + exception.Message;
+            _updateCheckCompleted = false;
+            UpdateStatus = LocalizationService.Format(
+                "Controllo aggiornamenti non disponibile: {0}",
+                exception.Message);
             if (!silent)
             {
                 _dialogs.ShowError(UpdateStatus, "Aggiornamenti");
@@ -2067,13 +2137,13 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         IsUpdating = true;
         try
         {
-            UpdateStatus = "Download dell'aggiornamento…";
+            UpdateStatus = LocalizationService.Translate("Download dell'aggiornamento…");
             var installer = await _updateService.DownloadInstallerAsync(
                 AvailableUpdate,
                 new Progress<double>(fraction =>
-                    UpdateStatus = $"Download installer: {fraction:P0}"),
+                    UpdateStatus = LocalizationService.Format("Download installer: {0}", $"{fraction:P0}")),
                 CancellationToken.None);
-            UpdateStatus = "Avvio dell'installer…";
+            UpdateStatus = LocalizationService.Translate("Avvio dell'installer…");
             Process.Start(new ProcessStartInfo
             {
                 FileName = "msiexec.exe",
@@ -2085,7 +2155,9 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         }
         catch (Exception exception)
         {
-            UpdateStatus = "Aggiornamento non completato: " + exception.Message;
+            UpdateStatus = LocalizationService.Format(
+                "Aggiornamento non completato: {0}",
+                exception.Message);
             _dialogs.ShowError(UpdateStatus, "Aggiornamenti");
         }
         finally
@@ -2144,7 +2216,8 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
             {
                 IncludeSettings = DefaultBackupSettings,
                 IncludeData = DefaultBackupData,
-                IncludeInstalledFiles = DefaultBackupInstalledFiles
+                IncludeInstalledFiles = DefaultBackupInstalledFiles,
+                Language = LocalizationService.CurrentLanguage
             });
         }
         catch (Exception exception)

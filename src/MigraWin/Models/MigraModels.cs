@@ -196,16 +196,24 @@ public sealed class InstalledApplication : ObservableObject
 
     public string SupportLabel => SupportLevel switch
     {
-        SupportLevel.Detected => "Rilevato",
-        SupportLevel.Archivable => "Archiviabile",
-        SupportLevel.OnlineReinstall => "Reinstallabile online",
-        SupportLevel.OfflineReinstall => "Reinstallabile offline",
-        SupportLevel.VerifiedMigration => "Migrazione verificata",
-        _ => "Rilevato"
+        SupportLevel.Detected => LocalizationService.Translate("Rilevato"),
+        SupportLevel.Archivable => LocalizationService.Translate("Archiviabile"),
+        SupportLevel.OnlineReinstall => LocalizationService.Translate("Reinstallabile online"),
+        SupportLevel.OfflineReinstall => LocalizationService.Translate("Reinstallabile offline"),
+        SupportLevel.VerifiedMigration => LocalizationService.Translate("Migrazione verificata"),
+        _ => LocalizationService.Translate("Rilevato")
     };
-    public string SelectionLabel => IsGame ? "Gioco escluso" : IsSelected ? "Nel backup" : "Non selezionato";
-    public string SizeLabel => EstimatedSize > 0 ? FormatBytes(EstimatedSize) : "Da calcolare";
+    public string SelectionLabel => LocalizationService.Translate(
+        IsGame ? "Gioco escluso" : IsSelected ? "Nel backup" : "Non selezionato");
+    public string SizeLabel => EstimatedSize > 0 ? FormatBytes(EstimatedSize) : LocalizationService.Translate("Da calcolare");
     public string VersionLabel => $"{Version} · {Architecture}";
+
+    public void RefreshLocalization()
+    {
+        OnPropertyChanged(nameof(SupportLabel));
+        OnPropertyChanged(nameof(SelectionLabel));
+        OnPropertyChanged(nameof(SizeLabel));
+    }
 
     public static string FormatBytes(long bytes)
     {
@@ -308,12 +316,12 @@ public sealed class SnapshotApplication
     public List<SnapshotComponent> Components { get; set; } = [];
     public string SupportLabel => SupportLevel switch
     {
-        SupportLevel.Detected => "Rilevato",
-        SupportLevel.Archivable => "Archiviabile",
-        SupportLevel.OnlineReinstall => "Reinstallabile online",
-        SupportLevel.OfflineReinstall => "Reinstallabile offline",
-        SupportLevel.VerifiedMigration => "Migrazione verificata",
-        _ => "Rilevato"
+        SupportLevel.Detected => LocalizationService.Translate("Rilevato"),
+        SupportLevel.Archivable => LocalizationService.Translate("Archiviabile"),
+        SupportLevel.OnlineReinstall => LocalizationService.Translate("Reinstallabile online"),
+        SupportLevel.OfflineReinstall => LocalizationService.Translate("Reinstallabile offline"),
+        SupportLevel.VerifiedMigration => LocalizationService.Translate("Migrazione verificata"),
+        _ => LocalizationService.Translate("Rilevato")
     };
 }
 

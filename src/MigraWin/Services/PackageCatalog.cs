@@ -16,7 +16,8 @@ public sealed class PackageEntry
     public bool SignaturePresent { get; set; }
     public DateTimeOffset ImportedAt { get; set; } = DateTimeOffset.Now;
     public string SizeLabel => InstalledApplication.FormatBytes(Length);
-    public string SignatureLabel => SignaturePresent ? "Firma rilevata" : "Firma non verificata";
+    public string SignatureLabel => LocalizationService.Translate(
+        SignaturePresent ? "Firma rilevata" : "Firma non verificata");
 }
 
 public sealed class PackageCatalog

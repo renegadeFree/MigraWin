@@ -176,3 +176,9 @@ In **Impostazioni → Backup predefinito** puoi stabilire quali componenti vengo
 - copia archivistica dei file installati.
 
 Le scelte vengono salvate in `%LOCALAPPDATA%\MigraWin\settings.json`. Sono valori iniziali: puoi ancora deselezionare un componente nella singola applicazione, ma la successiva analisi riapplica i predefiniti. Il profilo **Completo supportato** rispetta l'opzione sui file installati. La copia dei file installati può richiedere molto spazio.
+
+## 13. Lingua
+
+In **Impostazioni → Lingua** puoi scegliere italiano, inglese, cinese semplificato, giapponese, coreano, spagnolo, turco, russo, greco, francese o tedesco. La modifica viene applicata immediatamente e salvata per gli avvii successivi.
+
+La traduzione copre navigazione, comandi, impostazioni e flussi principali. Se una descrizione tecnica non è ancora disponibile nella lingua scelta, MigraWin usa l'inglese come fallback invece dell'italiano. Il manuale e i documenti di formato sono mantenuti in italiano.

@@ -6,7 +6,7 @@
 
 [![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
 
-[Scarica MigraWin 1.8.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.8.0/MigraWin-1.8.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
+[Scarica MigraWin 1.9.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.9.0/MigraWin-1.9.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
 
 [![Panoramica di MigraWin](docs/images/panoramica.png)](docs/images/panoramica.png)
 
@@ -66,6 +66,12 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 
 [![Controllo aggiornamenti in MigraWin](docs/images/aggiornamenti.png)](docs/images/aggiornamenti.png)
 
+### Interfaccia multilingue
+
+La lingua si cambia da **Impostazioni → Lingua** e viene applicata immediatamente. Sono disponibili italiano, inglese, cinese semplificato, giapponese, coreano, spagnolo, turco, russo, greco, francese e tedesco.
+
+[![Selettore della lingua in MigraWin](docs/images/lingue.png)](docs/images/lingue.png)
+
 ## Funzioni principali
 
 | Area | Cosa offre |
@@ -74,6 +80,7 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 | Script personali | Rilevamento di script `.ps1`, `.cmd`, `.bat`, `.vbs`, `.py`, `.js`, `.mjs` e `.cjs` nella cartella utente |
 | Schede applicazione | Icona locale, versione, collegamento ufficiale e galleria di immagini prodotto |
 | Predefiniti globali | Scelta persistente di impostazioni, dati e copia dei file installati per ogni nuova analisi |
+| Lingue | Interfaccia in italiano, inglese, cinese, giapponese, coreano, spagnolo, turco, russo, greco, francese e tedesco |
 | Selezione | Componenti per applicazione, cartelle dati aggiuntive, esclusioni persistenti e profili importabili/esportabili |
 | Backup | Copia completa, incrementale o differenziale con deduplicazione |
 | Protezione | Oggetti AES-256-GCM, manifest autenticati, password PBKDF2 e chiave di recupero indipendente |
@@ -87,20 +94,20 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 
 Requisiti: **Windows 11 x64**.
 
-1. Scarica [MigraWin 1.8.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.8.0/MigraWin-1.8.0-x64.msi).
+1. Scarica [MigraWin 1.9.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.9.0/MigraWin-1.9.0-x64.msi).
 2. Apri l'MSI. L'installazione avviene per l'utente corrente e non richiede privilegi amministrativi; crea i collegamenti nel menu Start e sul Desktop.
 3. Avvia MigraWin dal menu Start.
 
 Puoi verificare il download:
 
 ```powershell
-Get-FileHash .\MigraWin-1.8.0-x64.msi -Algorithm SHA256
+Get-FileHash .\MigraWin-1.9.0-x64.msi -Algorithm SHA256
 ```
 
-Hash SHA-256 della release 1.8.0:
+Hash SHA-256 della release 1.9.0:
 
 ```text
-37C13D3B5B27203B4790294D073C72CAA47AC73B23398B9A9E9DC01BB20C6F87
+Il valore aggiornato è pubblicato anche in SHA256SUMS.txt nella release.
 ```
 
 > **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.
@@ -137,7 +144,7 @@ La voce **n8n** include l'installazione npm attiva, i wrapper CLI, database e fi
 - Sono fuori perimetro WSL, container Docker e macchine virtuali.
 - Windows 10 e Windows ARM64 non sono dichiarati supportati.
 - La scansione automatica degli script copre la radice del profilo e gli strumenti noti, non ogni progetto annidato nel disco.
-- La release 1.8.0 non è firmata con un certificato Authenticode.
+- La release 1.9.0 non è firmata con un certificato Authenticode.
 
 ## Sviluppo e collaudo
 
@@ -156,6 +163,8 @@ dotnet run --project tests\MigraWin.Tests\MigraWin.Tests.csproj -c Release
 ```
 
 La suite copre crittografia, password errata, recupero, deduplicazione, backup incrementale e differenziale, archivi `.migrawin`, percorsi ostili, conservazione, DPAPI, pianificazione, conflitti, rollback e rilevamento di oggetti manomessi.
+
+La localizzazione copre navigazione, comandi, impostazioni e flussi principali. Le descrizioni tecniche non ancora tradotte in una lingua specifica usano l'inglese come fallback.
 
 ## Documentazione
 

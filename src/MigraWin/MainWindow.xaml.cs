@@ -16,10 +16,14 @@ public partial class MainWindow : Window
         DataContext = _viewModel;
         SourceInitialized += (_, _) => WindowAppearance.Apply(this, ThemeManager.CurrentPreference);
         ThemeManager.ThemeChanged += ThemeManager_OnThemeChanged;
+        LocalizationService.LanguageChanged += LocalizationService_OnLanguageChanged;
     }
 
-    private async void Window_OnLoaded(object sender, RoutedEventArgs e) =>
+    private async void Window_OnLoaded(object sender, RoutedEventArgs e)
+    {
         await _viewModel.InitializeAsync();
+        LocalizationService.LocalizeTree(this);
+    }
 
     private void Window_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
@@ -32,6 +36,7 @@ public partial class MainWindow : Window
     private async void Window_OnClosed(object? sender, EventArgs e)
     {
         ThemeManager.ThemeChanged -= ThemeManager_OnThemeChanged;
+        LocalizationService.LanguageChanged -= LocalizationService_OnLanguageChanged;
         await _viewModel.DisposeAsync();
     }
 
@@ -41,6 +46,12 @@ public partial class MainWindow : Window
         {
             WindowAppearance.Apply(this, preference);
         }
+    }
+
+    private void LocalizationService_OnLanguageChanged()
+    {
+        _viewModel.RefreshLanguage();
+        LocalizationService.LocalizeTree(this);
     }
 }
 

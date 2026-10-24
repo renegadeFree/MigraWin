@@ -28,6 +28,19 @@
 
             <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
                 <StackPanel>
+                    <TextBlock Text="Lingua" Style="{StaticResource SubtitleText}" />
+                    <TextBlock Text="La scelta viene applicata subito e memorizzata per i prossimi avvii."
+                               Style="{StaticResource MutedText}" Margin="0,4,0,12" />
+                    <ComboBox ItemsSource="{Binding LanguageOptions}"
+                              DisplayMemberPath="NativeName"
+                              SelectedIndex="{Binding LanguageChoiceIndex}"
+                              Width="300" HorizontalAlignment="Left"
+                              AutomationProperties.Name="Lingua dell'applicazione" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                <StackPanel>
                     <TextBlock Text="Backup predefinito" Style="{StaticResource SubtitleText}" />
                     <TextBlock Text="Questi valori vengono applicati a ogni nuova analisi e ai programmi portabili aggiunti; il profilo Completo supportato li rispetta. Le modifiche manuali nella singola applicazione restano valide fino alla scansione successiva."
                                Style="{StaticResource MutedText}" Margin="0,4,0,14" />

@@ -61,6 +61,8 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Rilevato e descritto l'avvio n8n tramite `avvia_n8n.vbs`, mantenendo il ripristino come file non eseguito automaticamente.
 - [x] Aggiunti predefiniti globali persistenti per impostazioni, dati e copia archivistica dei file installati.
 - [x] I predefiniti vengono applicati alle nuove scansioni e ai programmi portabili, con salvataggio JSON atomico.
+- [x] Aggiunta la scelta della lingua con 11 localizzazioni e cambio immediato a runtime.
+- [x] Persistita la lingua in `settings.json` e aggiunto fallback inglese per i testi tecnici.
 
 ## Collaudi eseguiti
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.9.0 — 24 ottobre 2026
+
+- aggiunta la scelta della lingua con applicazione immediata e persistenza locale;
+- interfaccia disponibile in italiano, inglese, cinese semplificato, giapponese, coreano, spagnolo, turco, russo, greco, francese e tedesco;
+- localizzati navigazione, comandi, impostazioni, riepiloghi e principali messaggi di stato;
+- aggiunto fallback inglese per i testi tecnici non ancora tradotti nelle lingue secondarie.
+
 ## 1.8.0 — 24 ottobre 2026
 
 - aggiunti predefiniti globali persistenti per impostazioni, dati e file installati;
