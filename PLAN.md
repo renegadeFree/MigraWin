@@ -66,19 +66,20 @@ Ulteriori verifiche effettuate:
 - `dotnet list package --vulnerable --include-transitive`: nessun pacchetto vulnerabile;
 - build Debug e Release senza errori;
 - MSI installato con codice 0;
-- avvio del binario self-contained installato dalla release 1.6.0, finestra responsiva.
+- avvio del binario self-contained installato dalla release 1.6.1, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
 - icone applicazione estratte dal PC e galleria promozionale ufficiale verificate visivamente in Visual Studio Code;
-- nuova icona v1.6.0 verificata nell'API, nell'eseguibile e nella finestra installata;
+- icona fornita dall'utente verificata nell'API, nell'eseguibile e nella finestra installata;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.6.0`;
-- GitHub Action della release `v1.6.0` completata con esito `success`;
-- Windows CI sul commit `20fba0c` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
-- MSI pubblico v1.6.0 scaricato e verificato: 59.977.728 byte, SHA-256 `1F7E938C4EFEF74585FDF50B99D81E26BE72C7B6D6F0196D3585F50D1AA366A7`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.6.1`;
+- GitHub Action della release `v1.6.1` completata con esito `success`;
+- Windows CI sul commit `862a884` completata con esito `success`: build, test, installazione MSI, self-check, menu Start, collegamento Desktop e disinstallazione;
+- MSI pubblico v1.6.1 scaricato e verificato: 59.756.544 byte, SHA-256 `3731FAAB494EF0039A21D33C037E996B8AAEBCADF986CD48F0474D7A3FA0DB8F`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
-- release pubblica `v1.6.0` installata con codice 0 e avviata correttamente;
-- scansione reale con 572 applicazioni/strumenti, inclusi 21 script personali e configurazioni locali;
+- release pubblica `v1.6.1` installata con codice 0 e avviata correttamente;
+- collegamento Desktop verificato prima dell'installazione, dopo l'installazione e dopo la disinstallazione;
+- scansione reale con applicazioni e strumenti, inclusi script personali e configurazioni locali;
 - strumenti verificati nell'inventario: Enter for rename, PM2, n8n, Pi Agent e Proxy DeepSeek per Codex.
 - backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
