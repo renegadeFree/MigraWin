@@ -227,26 +227,6 @@ try
 
     var updateBytes = Encoding.UTF8.GetBytes("installer-fittizio");
     var updateHash = Convert.ToHexString(SHA256.HashData(updateBytes));
-    using var releaseDocument = JsonDocument.Parse(
-        $$"""
-        {
-          "tag_name": "v9.0.0",
-          "html_url": "https://github.com/renegadeFree/MigraWin/releases/tag/v9.0.0",
-          "body": "Aggiornamento di prova",
-          "draft": false,
-          "prerelease": false,
-          "assets": [
-            {
-              "name": "MigraWin-9.0.0-x64.msi",
-              "browser_download_url": "https://github.com/renegadeFree/MigraWin/releases/download/v9.0.0/MigraWin-9.0.0-x64.msi"
-            },
-            {
-              "name": "SHA256SUMS.txt",
-              "browser_download_url": "https://github.com/renegadeFree/MigraWin/releases/download/v9.0.0/SHA256SUMS.txt"
-            }
-          ]
-        }
-        """);
     var updateHandler = new StubHttpHandler(request =>
         request.RequestUri!.AbsolutePath.EndsWith("SHA256SUMS.txt", StringComparison.Ordinal)
             ? new HttpResponseMessage(System.Net.HttpStatusCode.OK)
@@ -264,9 +244,19 @@ try
                Path.Combine("MigraWinUpdates"),
                StringComparison.OrdinalIgnoreCase),
         "La cartella predefinita degli aggiornamenti deve essere stabile e accessibile a Windows Installer.");
-    var availableUpdate = updateService.ParseRelease(releaseDocument.RootElement, new Version(1, 4, 0));
-    Assert(availableUpdate is { Version.Major: 9 },
-        "Il client aggiornamenti deve riconoscere una release più recente.");
+    var liveCheckHandler = new StubHttpHandler(_ =>
+    {
+        var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+        response.RequestMessage = new HttpRequestMessage(
+            HttpMethod.Get,
+            "https://github.com/renegadeFree/MigraWin/releases/tag/v9.0.0");
+        return response;
+    });
+    var checkedUpdate = await new UpdateService(new HttpClient(liveCheckHandler))
+        .CheckAsync(CancellationToken.None);
+    Assert(checkedUpdate is { Version.Major: 9 },
+        "Il controllo tramite pagina Releases non deve dipendere dal limite API GitHub.");
+    var availableUpdate = checkedUpdate;
     var downloadedInstaller = await updateService.DownloadInstallerAsync(
         availableUpdate!,
         null,

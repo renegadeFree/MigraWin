@@ -2,7 +2,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text.Json;
 
 namespace MigraWin.Services;
 
@@ -39,7 +38,7 @@ public sealed class UpdateService
             _client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("MigraWin", CurrentVersion.ToString()));
         }
 
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
     }
 
     public static Version CurrentVersion =>
@@ -49,13 +48,41 @@ public sealed class UpdateService
 
     public async Task<AvailableUpdate?> CheckAsync(CancellationToken cancellationToken = default)
     {
-        var endpoint = $"https://api.github.com/repos/{_owner}/{_repository}/releases/latest";
+        var endpoint = $"https://github.com/{_owner}/{_repository}/releases/latest";
         using var response = await _client.GetAsync(endpoint, cancellationToken);
         if (response.IsSuccessStatusCode)
         {
-            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-            using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
-            return ParseRelease(document.RootElement);
+            var finalUrl = response.RequestMessage?.RequestUri;
+            if (finalUrl is null)
+            {
+                return null;
+            }
+
+            var segments = finalUrl.AbsolutePath
+                .Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var tagIndex = Array.FindIndex(segments, segment =>
+                segment.Equals("tag", StringComparison.OrdinalIgnoreCase));
+            if (tagIndex < 0 || tagIndex + 1 >= segments.Length)
+            {
+                return null;
+            }
+
+            var tag = Uri.UnescapeDataString(segments[tagIndex + 1]);
+            if (!TryParseVersion(tag, out var version) || version <= CurrentVersion)
+            {
+                return null;
+            }
+
+            var installerName = $"MigraWin-{version}-x64.msi";
+            var releaseBase = $"https://github.com/{_owner}/{_repository}/releases/download/{tag}";
+            return new AvailableUpdate(
+                version,
+                tag,
+                finalUrl.AbsoluteUri,
+                string.Empty,
+                $"{releaseBase}/{installerName}",
+                installerName,
+                $"{releaseBase}/SHA256SUMS.txt");
         }
 
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -141,48 +168,6 @@ public sealed class UpdateService
 
             throw;
         }
-    }
-
-    internal AvailableUpdate? ParseRelease(JsonElement release, Version? currentVersion = null)
-    {
-        var tag = release.GetProperty("tag_name").GetString() ?? string.Empty;
-        if (!TryParseVersion(tag, out var version)
-            || version <= (currentVersion ?? CurrentVersion)
-            || release.TryGetProperty("draft", out var draft) && draft.GetBoolean()
-            || release.TryGetProperty("prerelease", out var prerelease) && prerelease.GetBoolean())
-        {
-            return null;
-        }
-
-        var assets = release.GetProperty("assets").EnumerateArray()
-            .Select(asset => new
-            {
-                Name = asset.GetProperty("name").GetString() ?? string.Empty,
-                Url = asset.GetProperty("browser_download_url").GetString() ?? string.Empty
-            })
-            .ToArray();
-        var installer = assets.FirstOrDefault(asset =>
-            asset.Name.StartsWith("MigraWin-", StringComparison.OrdinalIgnoreCase)
-            && asset.Name.EndsWith("-x64.msi", StringComparison.OrdinalIgnoreCase));
-        var checksums = assets.FirstOrDefault(asset =>
-            asset.Name.Equals("SHA256SUMS.txt", StringComparison.OrdinalIgnoreCase));
-        if (installer is null || checksums is null
-            || !Uri.TryCreate(installer.Url, UriKind.Absolute, out var installerUri)
-            || installerUri.Scheme != Uri.UriSchemeHttps
-            || !Uri.TryCreate(checksums.Url, UriKind.Absolute, out var checksumUri)
-            || checksumUri.Scheme != Uri.UriSchemeHttps)
-        {
-            return null;
-        }
-
-        return new AvailableUpdate(
-            version,
-            tag,
-            release.TryGetProperty("html_url", out var page) ? page.GetString() ?? string.Empty : string.Empty,
-            release.TryGetProperty("body", out var notes) ? notes.GetString() ?? string.Empty : string.Empty,
-            installer.Url,
-            installer.Name,
-            checksums.Url);
     }
 
     internal static string ParseExpectedHash(string checksums, string installerName)

@@ -28,7 +28,7 @@ MigraWin è un'applicazione desktop Windows per inventariare il software install
 L'installer è generato in:
 
 ```text
-artifacts\installer\MigraWin-1.4.3-x64.msi
+artifacts\installer\MigraWin-1.4.4-x64.msi
 ```
 
 L'installazione è per l'utente corrente e non richiede privilegi amministrativi. L'app viene installata in `%LOCALAPPDATA%\Programs\MigraWin`.
@@ -72,7 +72,7 @@ Oppure, con .NET 10 SDK nel `PATH`:
 dotnet tool restore
 dotnet publish src\MigraWin\MigraWin.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o artifacts\publish
 dotnet tool run wix extension add WixToolset.UI.wixext/6.0.2
-dotnet tool run wix build installer\MigraWin.wxs -ext WixToolset.UI.wixext -arch x64 -o artifacts\installer\MigraWin-1.4.3-x64.msi
+dotnet tool run wix build installer\MigraWin.wxs -ext WixToolset.UI.wixext -arch x64 -o artifacts\installer\MigraWin-1.4.4-x64.msi
 ```
 
 ## Collaudi

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.4 — 24 ottobre 2026
+
+- verifica aggiornamenti tramite la pagina pubblica GitHub Releases;
+- rimozione della dipendenza dal limite anonimo delle API GitHub;
+- fallback trasparente quando il controllo non è disponibile.
+
 ## 1.4.3 — 24 ottobre 2026
 
 - barra laterale compatta automatica nelle finestre strette;
