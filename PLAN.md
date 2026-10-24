@@ -8,8 +8,8 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 
 ## Stato verificato
 
-- [x] Specifica analizzata e portata alla versione 1.1.
-- [x] Repository Git inizializzato.
+- [x] Specifica analizzata e portata alla versione 1.2.
+- [x] Repository Git pubblico `renegadeFree/MigraWin` creato e pubblicato.
 - [x] Progetto WPF .NET 10 e progetto di collaudo creato.
 - [x] Inventario registro a 32/64 bit e applicazioni Store/MSIX.
 - [x] Ricerca, filtri, selezione multipla e dettaglio per componente.
@@ -21,7 +21,6 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Password PBKDF2 e chiave di recupero indipendente.
 - [x] Backup incrementale o differenziale, protezione da scritture concorrenti e verifica.
 - [x] Conservazione configurabile ed esportazione di un archivio autonomo.
-- [x] Cambio password senza riscrivere gli oggetti.
 - [x] Cambio password con riprotezione della chiave master.
 - [x] Ripristino per applicazione/componente, mappature, conflitti e rollback.
 - [x] Rapporti Markdown/JSON e cronologia SQLite.
@@ -34,6 +33,8 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Esclusione predefinita dei file che possono contenere segreti.
 - [x] Esclusioni persistenti per sottocartelle all'interno dei dati applicativi.
 - [x] Esportazione e importazione `.migrawin` in un singolo file con estrazione controllata.
+- [x] Controllo aggiornamenti, download MSI e verifica SHA-256 da GitHub Releases.
+- [x] GitHub Action per build e pubblicazione delle future release con tag `v*`.
 
 ## Collaudi eseguiti
 
@@ -50,8 +51,11 @@ Ulteriori verifiche effettuate:
 - MSI installato con codice 0;
 - avvio del binario self-contained installato, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
-- MSI finale 1.3.1: 59.682.816 byte, SHA-256 `1A49C63A7F6980E198BA9E5D24402FA308D3F8ED2BF57EAC2E8922AE55E9D149`;
-- eseguibile self-contained finale 1.3.1: SHA-256 `7FCB442B494D4C1488DDA2A036AA59BCC6980EA160F840789D47EBE1E72A2F38`.
+- repository pubblico: `https://github.com/renegadeFree/MigraWin`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.0`;
+- GitHub Action della release completata con esito `success`;
+- MSI pubblico scaricato nuovamente e verificato: 59.682.816 byte, SHA-256 `341F93E945C08B43400B0FFF986E430BA924B6C6103A0BA39CCF2B0059B78622`;
+- client di aggiornamento installato: release `v1.4.0` riconosciuta come versione corrente.
 
 ## Prossimi incrementi
 
