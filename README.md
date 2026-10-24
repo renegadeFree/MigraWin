@@ -2,8 +2,6 @@
 
 MigraWin è un'applicazione desktop Windows per inventariare il software installato, scegliere componenti da conservare, creare un repository cifrato e ripristinare i contenuti su un altro PC.
 
-Repository pubblico: [renegadeFree/MigraWin](https://github.com/renegadeFree/MigraWin).
-
 ## Cosa include questa versione
 
 - inventario del registro a 32/64 bit e dei pacchetti Microsoft Store/MSIX;
