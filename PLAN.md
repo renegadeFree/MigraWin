@@ -36,6 +36,7 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Controllo aggiornamenti, download MSI e verifica SHA-256 da GitHub Releases.
 - [x] GitHub Action per build e pubblicazione delle future release con tag `v*`.
 - [x] Adattatore Git verificato end-to-end con backup cifrato e ripristino in cartella isolata.
+- [x] Percorso UI Git verificato interattivamente: selezione, backup, conferma, preparazione e ripristino.
 
 ## Collaudi eseguiti
 
@@ -59,11 +60,12 @@ Ulteriori verifiche effettuate:
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
 - client 1.4.2 riconosce la release `v1.4.2` come versione corrente.
+- backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
 ## Prossimi incrementi
 
 - [ ] Collaudo su una VM Windows 11 pulita distinta da quella di sviluppo.
-- [ ] Backup e ripristino interattivi mediante UI su una fixture di applicazione reale.
+- [x] Backup e ripristino interattivi mediante UI su una fixture di applicazione reale.
 - [x] Confronto tra snapshot e rapporto differenziale visuale.
 - [x] Incapsulamento e importazione dell'archivio autonomo in un unico file.
 - [x] Pianificazione protetta tramite Utilità di pianificazione e chiavi DPAPI.
