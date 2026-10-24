@@ -37,6 +37,7 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] GitHub Action per build e pubblicazione delle future release con tag `v*`.
 - [x] Pipeline di firma Authenticode opzionale per exe e MSI.
 - [x] Adattatore Git verificato end-to-end con backup cifrato e ripristino in cartella isolata.
+- [x] Adattatore Notepad++ verificato end-to-end con backup cifrato e ripristino isolato.
 - [x] Percorso UI Git verificato interattivamente: selezione, backup, conferma, preparazione e ripristino.
 
 ## Collaudi eseguiti

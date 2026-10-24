@@ -6,9 +6,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-if (args.Length == 2 && args[0] == "--git-adapter-roundtrip")
+if (args.Length == 5 && args[0] == "--adapter-roundtrip")
 {
-    await RunGitAdapterRoundTripAsync(args[1]);
+    await RunAdapterRoundTripAsync(args[1], args[2], args[3], args[4]);
     return;
 }
 
@@ -506,37 +506,38 @@ static bool ContainsSequence(byte[] haystack, byte[] needle)
     return false;
 }
 
-static async Task RunGitAdapterRoundTripAsync(string workRoot)
+static async Task RunAdapterRoundTripAsync(
+    string applicationName,
+    string expectedRelativePath,
+    string sourceFile,
+    string workRoot)
 {
-    var sourceConfig = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-        ".gitconfig");
-    Assert(File.Exists(sourceConfig), "La fixture Git locale non esiste.");
+    Assert(File.Exists(sourceFile), $"La fixture locale per {applicationName} non esiste.");
     Directory.CreateDirectory(workRoot);
     try
     {
         var applications = await new InventoryService().ScanAsync(false, CancellationToken.None);
-        var git = applications.FirstOrDefault(application =>
-            application.DisplayName.Equals("Git", StringComparison.OrdinalIgnoreCase));
-        Assert(git is not null, "L'adattatore Git non è stato rilevato.");
-        git!.IsSelected = true;
-        git.BackupSettings = true;
-        git.BackupData = false;
+        var selectedApplication = applications.FirstOrDefault(application =>
+            application.DisplayName.StartsWith(applicationName, StringComparison.OrdinalIgnoreCase));
+        Assert(selectedApplication is not null, $"L'adattatore {applicationName} non è stato rilevato.");
+        selectedApplication!.IsSelected = true;
+        selectedApplication.BackupSettings = true;
+        selectedApplication.BackupData = false;
         var repositoryPath = Path.Combine(workRoot, "repository");
         var (manifest, _) = await new BackupService().CreateBackupAsync(
             repositoryPath,
-            "Git-adapter-password-2026",
-            [git],
+            "Adapter-password-2026",
+            [selectedApplication],
             BackupScope.Full,
             10,
-            "Git adapter end-to-end",
+            applicationName + " adapter end-to-end",
             CancellationToken.None);
         await using var repository = await RepositorySession.OpenAsync(
             repositoryPath,
-            "Git-adapter-password-2026");
+            "Adapter-password-2026");
         var manifestApplication = manifest.Applications.Single();
         Assert(manifestApplication.Components.Any(component => component.Files.Count > 0),
-            $"L'adattatore Git non ha acquisito file (avvisi: {string.Join(" | ", manifest.Warnings)}).");
+            $"L'adattatore {applicationName} non ha acquisito file (avvisi: {string.Join(" | ", manifest.Warnings)}).");
         var restoreRoot = Path.Combine(workRoot, "restored-profile");
         var options = new RestoreOptions { ConflictPolicy = ConflictPolicy.KeepExisting };
         options.ApplicationIds.Add(manifestApplication.InstallationId);
@@ -555,13 +556,13 @@ static async Task RunGitAdapterRoundTripAsync(string workRoot)
         var result = await new RestoreService(Path.Combine(workRoot, "reports"))
             .RestoreAsync(repository, manifest, options, CancellationToken.None);
         Assert(result.Errors.Count == 0 && result.FilesRestored > 0,
-            $"Il ripristino dell'adattatore Git non è riuscito (file {result.FilesRestored}, errori: {string.Join(" | ", result.Errors)}).");
-        var restoredConfig = Path.Combine(restoreRoot, ".gitconfig");
-        Assert(File.Exists(restoredConfig), "La configurazione Git non è stata ripristinata.");
+            $"Il ripristino dell'adattatore {applicationName} non è riuscito (file {result.FilesRestored}, errori: {string.Join(" | ", result.Errors)}).");
+        var restoredConfig = Path.Combine(restoreRoot, expectedRelativePath);
+        Assert(File.Exists(restoredConfig), $"La configurazione {applicationName} non è stata ripristinata.");
         Assert((await File.ReadAllTextAsync(restoredConfig)) ==
-               (await File.ReadAllTextAsync(sourceConfig)),
-            "La configurazione Git ripristinata deve coincidere con l'originale.");
-        Console.WriteLine("OK: adattatore Git reale, backup cifrato e ripristino isolato verificati.");
+               (await File.ReadAllTextAsync(sourceFile)),
+            $"La configurazione {applicationName} ripristinata deve coincidere con l'originale.");
+        Console.WriteLine($"OK: adattatore {applicationName}, backup cifrato e ripristino isolato verificati.");
     }
     finally
     {
