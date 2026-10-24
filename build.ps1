@@ -13,6 +13,15 @@ $publishDirectory = Join-Path $root "artifacts\publish"
 $installerDirectory = Join-Path $root "artifacts\installer"
 New-Item -ItemType Directory -Force -Path $publishDirectory, $installerDirectory | Out-Null
 
+$signingPfx = $env:MIGRAWIN_SIGN_PFX
+$temporaryPfx = $null
+if (-not $signingPfx -and $env:MIGRAWIN_SIGN_PFX_BASE64) {
+    $temporaryRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { $env:TEMP }
+    $temporaryPfx = Join-Path $temporaryRoot ("MigraWin-signing-" + [guid]::NewGuid().ToString("N") + ".pfx")
+    [IO.File]::WriteAllBytes($temporaryPfx, [Convert]::FromBase64String($env:MIGRAWIN_SIGN_PFX_BASE64))
+    $signingPfx = $temporaryPfx
+}
+
 & $dotnet publish (Join-Path $root "src\MigraWin\MigraWin.csproj") `
     -c $Configuration `
     -r win-x64 `
@@ -23,6 +32,14 @@ New-Item -ItemType Directory -Force -Path $publishDirectory, $installerDirectory
     -o $publishDirectory
 if ($LASTEXITCODE -ne 0) {
     throw "Publish non riuscito."
+}
+
+if ($signingPfx -or $env:MIGRAWIN_SIGN_CERT_THUMBPRINT) {
+    & (Join-Path $root "scripts\Sign-Artifacts.ps1") `
+        -Files (Join-Path $publishDirectory "MigraWin.exe") `
+        -CertificateThumbprint $env:MIGRAWIN_SIGN_CERT_THUMBPRINT `
+        -PfxPath $signingPfx `
+        -PfxPassword $env:MIGRAWIN_SIGN_PFX_PASSWORD
 }
 
 Push-Location $root
@@ -46,6 +63,14 @@ try {
         throw "Creazione dell'installer non riuscita."
     }
 
+    if ($signingPfx -or $env:MIGRAWIN_SIGN_CERT_THUMBPRINT) {
+        & (Join-Path $root "scripts\Sign-Artifacts.ps1") `
+            -Files $msi `
+            -CertificateThumbprint $env:MIGRAWIN_SIGN_CERT_THUMBPRINT `
+            -PfxPath $signingPfx `
+            -PfxPassword $env:MIGRAWIN_SIGN_PFX_PASSWORD
+    }
+
     $hash = Get-FileHash -LiteralPath $msi -Algorithm SHA256
     "$($hash.Hash)  $([IO.Path]::GetFileName($msi))" |
         Set-Content -LiteralPath (Join-Path $installerDirectory "SHA256SUMS.txt") -Encoding ascii
@@ -53,4 +78,7 @@ try {
 }
 finally {
     Pop-Location
+    if ($temporaryPfx -and (Test-Path -LiteralPath $temporaryPfx)) {
+        Remove-Item -LiteralPath $temporaryPfx -Force
+    }
 }

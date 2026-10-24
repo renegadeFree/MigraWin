@@ -35,6 +35,7 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Esportazione e importazione `.migrawin` in un singolo file con estrazione controllata.
 - [x] Controllo aggiornamenti, download MSI e verifica SHA-256 da GitHub Releases.
 - [x] GitHub Action per build e pubblicazione delle future release con tag `v*`.
+- [x] Pipeline di firma Authenticode opzionale per exe e MSI.
 - [x] Adattatore Git verificato end-to-end con backup cifrato e ripristino in cartella isolata.
 - [x] Percorso UI Git verificato interattivamente: selezione, backup, conferma, preparazione e ripristino.
 
@@ -70,7 +71,7 @@ Ulteriori verifiche effettuate:
 - [x] Incapsulamento e importazione dell'archivio autonomo in un unico file.
 - [x] Pianificazione protetta tramite Utilità di pianificazione e chiavi DPAPI.
 - [ ] Altri adattatori applicativi con controlli di versione e ripristino automatico end-to-end.
-- [ ] Firma Authenticode dell'eseguibile e del pacchetto MSI.
+- [ ] Fornire il certificato Authenticode e pubblicare nuovamente gli artefatti firmati.
 - [ ] Verifiche High Contrast, DPI 200% e Windows con effetti di trasparenza disattivati.
 - [ ] Ambiente di test dedicato per Store, credenziali e applicazioni già installate.
 

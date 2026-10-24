@@ -87,6 +87,10 @@ In **Impostazioni** il programma confronta la versione installata con l'ultima r
 
 Gli installer aggiornati vengono conservati in `Downloads\MigraWinUpdates`.
 
+## Firma dei rilasci
+
+Impostando `MIGRAWIN_SIGN_PFX` e `MIGRAWIN_SIGN_PFX_PASSWORD`, oppure `MIGRAWIN_SIGN_CERT_THUMBPRINT`, `build.ps1` firma e verifica Authenticode sia `MigraWin.exe` sia il pacchetto MSI. La GitHub Action usa automaticamente i secret `MIGRAWIN_SIGN_PFX_BASE64` e `MIGRAWIN_SIGN_PFX_PASSWORD` quando configurati. Senza un certificato valido la build resta possibile, ma la release è dichiarata non firmata.
+
 ## Limiti noti
 
 - Ripristino e acquisizione sono collaudati su Windows 11 x64; Windows ARM64 e Windows 10 non sono dichiarati supportati.

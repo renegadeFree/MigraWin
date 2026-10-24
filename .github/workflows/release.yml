@@ -28,6 +28,9 @@ jobs:
 
       - name: Build MSI
         shell: pwsh
+        env:
+          MIGRAWIN_SIGN_PFX_BASE64: ${{ secrets.MIGRAWIN_SIGN_PFX_BASE64 }}
+          MIGRAWIN_SIGN_PFX_PASSWORD: ${{ secrets.MIGRAWIN_SIGN_PFX_PASSWORD }}
         run: .\build.ps1
 
       - name: Publish GitHub release

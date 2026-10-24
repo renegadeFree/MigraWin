@@ -8,3 +8,6 @@ artifacts/
 TestResults/
 *.user
 *.suo
+*.pfx
+*.cer
+*.pvk
