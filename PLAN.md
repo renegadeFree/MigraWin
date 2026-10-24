@@ -64,18 +64,20 @@ Ulteriori verifiche effettuate:
 - `dotnet list package --vulnerable --include-transitive`: nessun pacchetto vulnerabile;
 - build Debug e Release senza errori;
 - MSI installato con codice 0;
-- avvio del binario self-contained installato dalla release 1.5.0, finestra responsiva.
+- avvio del binario self-contained installato dalla release 1.6.0, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
 - icone applicazione estratte dal PC e galleria promozionale ufficiale verificate visivamente in Visual Studio Code;
-- nuova icona v1.5.0 verificata nell'API, nell'eseguibile e nella finestra installata;
+- nuova icona v1.6.0 verificata nell'API, nell'eseguibile e nella finestra installata;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.5.0`;
-- GitHub Action della release `v1.5.0` completata con esito `success`;
-- Windows CI sul commit `0c6f371` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
-- MSI pubblico v1.5.0 scaricato e verificato: 59.990.016 byte, SHA-256 `7829A41B7A7191410FB16B52D9D10A64F5159FBD2D9F8391FDC68BF2B5FE1678`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.6.0`;
+- GitHub Action della release `v1.6.0` completata con esito `success`;
+- Windows CI sul commit `20fba0c` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
+- MSI pubblico v1.6.0 scaricato e verificato: 59.977.728 byte, SHA-256 `1F7E938C4EFEF74585FDF50B99D81E26BE72C7B6D6F0196D3585F50D1AA366A7`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
-- release pubblica `v1.5.0` installata con codice 0 e avviata correttamente.
+- release pubblica `v1.6.0` installata con codice 0 e avviata correttamente;
+- scansione reale con 572 applicazioni/strumenti, inclusi 21 script personali e configurazioni locali;
+- strumenti verificati nell'inventario: Enter for rename, PM2, n8n, Pi Agent e Proxy DeepSeek per Codex.
 - backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
 ## Prossimi incrementi

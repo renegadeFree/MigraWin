@@ -96,7 +96,11 @@ Puoi verificare il download:
 Get-FileHash .\MigraWin-1.6.0-x64.msi -Algorithm SHA256
 ```
 
-Il checksum SHA-256 ufficiale è pubblicato accanto all'installer: [SHA256SUMS.txt](https://github.com/renegadeFree/MigraWin/releases/download/v1.6.0/SHA256SUMS.txt).
+Hash SHA-256 della release 1.6.0:
+
+```text
+1F7E938C4EFEF74585FDF50B99D81E26BE72C7B6D6F0196D3585F50D1AA366A7
+```
 
 > **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.
 
