@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1 — 24 ottobre 2026
+
+- corretto il rilevamento dell'adattatore Git;
+- backup e ripristino della configurazione Git verificati end-to-end;
+- l'aggiornamento integrato avvia MSI con installazione passiva.
+
 ## 1.4.0 — 24 ottobre 2026
 
 Prima release pubblica.

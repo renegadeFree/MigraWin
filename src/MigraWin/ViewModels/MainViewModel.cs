@@ -693,7 +693,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         }
     }
 
-    public string VersionLabel => "MigraWin 1.4.0 · Windows x64";
+    public string VersionLabel => "MigraWin 1.4.1 · Windows x64";
     public string DataDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "MigraWin");
@@ -1975,7 +1975,12 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
                     UpdateStatus = $"Download installer: {fraction:P0}"),
                 CancellationToken.None);
             UpdateStatus = "Avvio dell'installer…";
-            Process.Start(new ProcessStartInfo(installer) { UseShellExecute = true });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "msiexec.exe",
+                Arguments = $"/i \"{installer}\" /passive /norestart",
+                UseShellExecute = true
+            });
             await Task.Delay(300);
             Application.Current.Shutdown();
         }

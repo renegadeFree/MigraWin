@@ -6,6 +6,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
+if (args.Length == 2 && args[0] == "--git-adapter-roundtrip")
+{
+    await RunGitAdapterRoundTripAsync(args[1]);
+    return;
+}
+
 var root = Path.Combine(Path.GetTempPath(), "MigraWinTests-" + Guid.NewGuid().ToString("N"));
 var source = Path.Combine(root, "source");
 var repositoryPath = Path.Combine(root, "repository");
@@ -494,6 +500,72 @@ static bool ContainsSequence(byte[] haystack, byte[] needle)
     }
 
     return false;
+}
+
+static async Task RunGitAdapterRoundTripAsync(string workRoot)
+{
+    var sourceConfig = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+        ".gitconfig");
+    Assert(File.Exists(sourceConfig), "La fixture Git locale non esiste.");
+    Directory.CreateDirectory(workRoot);
+    try
+    {
+        var applications = await new InventoryService().ScanAsync(false, CancellationToken.None);
+        var git = applications.FirstOrDefault(application =>
+            application.DisplayName.Equals("Git", StringComparison.OrdinalIgnoreCase));
+        Assert(git is not null, "L'adattatore Git non è stato rilevato.");
+        git!.IsSelected = true;
+        git.BackupSettings = true;
+        git.BackupData = false;
+        var repositoryPath = Path.Combine(workRoot, "repository");
+        var (manifest, _) = await new BackupService().CreateBackupAsync(
+            repositoryPath,
+            "Git-adapter-password-2026",
+            [git],
+            BackupScope.Full,
+            10,
+            "Git adapter end-to-end",
+            CancellationToken.None);
+        await using var repository = await RepositorySession.OpenAsync(
+            repositoryPath,
+            "Git-adapter-password-2026");
+        var manifestApplication = manifest.Applications.Single();
+        Assert(manifestApplication.Components.Any(component => component.Files.Count > 0),
+            $"L'adattatore Git non ha acquisito file (avvisi: {string.Join(" | ", manifest.Warnings)}).");
+        var restoreRoot = Path.Combine(workRoot, "restored-profile");
+        var options = new RestoreOptions { ConflictPolicy = ConflictPolicy.KeepExisting };
+        options.ApplicationIds.Add(manifestApplication.InstallationId);
+        foreach (var component in manifestApplication.Components)
+        {
+            var key = RestoreOptions.ComponentKey(manifestApplication.InstallationId, component);
+            if (component.Files.Count == 0)
+            {
+                continue;
+            }
+
+            options.ComponentKeys.Add(key);
+            options.RootMappings[component.Root] = restoreRoot;
+        }
+
+        var result = await new RestoreService(Path.Combine(workRoot, "reports"))
+            .RestoreAsync(repository, manifest, options, CancellationToken.None);
+        Assert(result.Errors.Count == 0 && result.FilesRestored > 0,
+            $"Il ripristino dell'adattatore Git non è riuscito (file {result.FilesRestored}, errori: {string.Join(" | ", result.Errors)}).");
+        var restoredConfig = Path.Combine(restoreRoot, ".gitconfig");
+        Assert(File.Exists(restoredConfig), "La configurazione Git non è stata ripristinata.");
+        Assert((await File.ReadAllTextAsync(restoredConfig)) ==
+               (await File.ReadAllTextAsync(sourceConfig)),
+            "La configurazione Git ripristinata deve coincidere con l'originale.");
+        Console.WriteLine("OK: adattatore Git reale, backup cifrato e ripristino isolato verificati.");
+    }
+    finally
+    {
+        if (Directory.Exists(workRoot))
+        {
+            Directory.Delete(workRoot, true);
+        }
+    }
 }
 
 sealed class StubHttpHandler(Func<HttpRequestMessage, HttpResponseMessage> responseFactory) : HttpMessageHandler

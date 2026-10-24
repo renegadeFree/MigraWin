@@ -10,7 +10,7 @@
     <ApplicationIcon>Assets\MigraWin.ico</ApplicationIcon>
     <AssemblyName>MigraWin</AssemblyName>
     <RootNamespace>MigraWin</RootNamespace>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
     <Authors>Paolo</Authors>
     <Product>MigraWin</Product>
     <Description>Backup e migrazione trasparente dell'ambiente applicativo Windows.</Description>

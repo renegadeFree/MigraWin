@@ -25,7 +25,7 @@ public static partial class AdapterCatalog
             "https://github.com/microsoft/terminal/releases",
             [new(@"%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState", ["settings.json"])],
             []),
-        new("git", "Git", "^Git$|Git for Windows",
+        new("git", "Git", @"\bGit\b|Git for Windows",
             "https://git-scm.com/download/win",
             [new(@"%USERPROFILE%\.gitconfig"), new(@"%USERPROFILE%\.config\git")],
             []),

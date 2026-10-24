@@ -37,7 +37,7 @@ try {
         throw "Installazione dell'estensione WiX non riuscita."
     }
 
-    $msi = Join-Path $installerDirectory "MigraWin-1.4.0-x64.msi"
+    $msi = Join-Path $installerDirectory "MigraWin-1.4.1-x64.msi"
     & $dotnet tool run wix build "installer\MigraWin.wxs" `
         -ext WixToolset.UI.wixext `
         -arch x64 `
