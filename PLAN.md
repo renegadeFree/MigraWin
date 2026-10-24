@@ -60,16 +60,18 @@ Ulteriori verifiche effettuate:
 - `dotnet list package --vulnerable --include-transitive`: nessun pacchetto vulnerabile;
 - build Debug e Release senza errori;
 - MSI installato con codice 0;
-- avvio del binario self-contained installato, finestra responsiva.
+- avvio del binario self-contained installato dalla release 1.5.0, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
+- icone applicazione estratte dal PC e galleria promozionale ufficiale verificate visivamente in Visual Studio Code;
+- nuova icona v1.5.0 verificata nell'API, nell'eseguibile e nella finestra installata;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.4`;
-- GitHub Action della release `v1.4.4` completata con esito `success`;
-- CI sul commit `756418f` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
-- MSI pubblico v1.4.4 scaricato e verificato: 59.682.816 byte, SHA-256 `227B83EF4075E0EBD511AB83F5977B0C9FBD26FFEC9DF939535BBD1CFE534188`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.5.0`;
+- GitHub Action della release `v1.5.0` completata con esito `success`;
+- Windows CI sul commit `0c6f371` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
+- MSI pubblico v1.5.0 scaricato e verificato: 59.990.016 byte, SHA-256 `7829A41B7A7191410FB16B52D9D10A64F5159FBD2D9F8391FDC68BF2B5FE1678`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
-- client 1.4.4 riconosce la release `v1.4.4` come corrente senza dipendere dal limite API GitHub.
+- release pubblica `v1.5.0` installata con codice 0 e avviata correttamente.
 - backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
 ## Prossimi incrementi
