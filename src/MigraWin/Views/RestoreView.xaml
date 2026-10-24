@@ -1,0 +1,170 @@
+<UserControl x:Class="MigraWin.Views.RestoreView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="28,24,28,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <StackPanel>
+                <TextBlock Text="Ripristino selettivo" Style="{StaticResource TitleText}" />
+                <TextBlock Text="Scegli applicazioni e componenti. Le modifiche avvengono solo dopo la conferma del piano."
+                           Style="{StaticResource MutedText}" Margin="0,4,0,0" />
+            </StackPanel>
+            <Button Content="Torna all'archivio" Style="{StaticResource SecondaryButton}"
+                    Command="{Binding NavigateCommand}" CommandParameter="3"
+                    HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.7*" MinWidth="480" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" MinWidth="340" MaxWidth="440" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource CardBorder}" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Padding="18,14" BorderBrush="{DynamicResource AppStrokeBrush}" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <TextBlock Text="Contenuto da ripristinare" Style="{StaticResource SubtitleText}" />
+                            <TextBlock Text="{Binding RestoreAnalysis}" HorizontalAlignment="Right"
+                                       Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding RestoreApplications}"
+                             Background="Transparent" BorderThickness="0" Padding="14"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0,0,0,10" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource AppStrokeBrush}" BorderThickness="1"
+                                        CornerRadius="8" Padding="14" Background="{DynamicResource AppSurfaceAltBrush}">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center"
+                                                      Margin="0,0,10,0" />
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="{Binding Application.DisplayName}"
+                                                           Style="{StaticResource BodyStrongText}" />
+                                                <TextBlock Text="{Binding VersionLabel}" Style="{StaticResource CaptionText}"
+                                                           Margin="0,3,0,0" />
+                                            </StackPanel>
+                                            <Border Grid.Column="2" Style="{StaticResource Pill}">
+                                                <TextBlock Text="{Binding Application.SupportLabel}" FontSize="10"
+                                                           FontWeight="SemiBold" />
+                                            </Border>
+                                        </Grid>
+                                        <ItemsControl ItemsSource="{Binding Components}" Margin="26,12,0,0">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,0,0,8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center"
+                                                                  Margin="0,0,8,0" />
+                                                        <TextBlock Grid.Column="1" Text="{Binding Label}"
+                                                                   VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding CountLabel}"
+                                                                   Style="{StaticResource CaptionText}"
+                                                                   VerticalAlignment="Center" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="Mappature dei percorsi" Style="{StaticResource SubtitleText}" />
+                            <TextBlock Text="Associa le origini ai percorsi del nuovo PC."
+                                       Style="{StaticResource MutedText}" Margin="0,4,0,12" />
+                            <ItemsControl ItemsSource="{Binding RestoreMappings}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <TextBlock Text="{Binding DisplaySource}" Style="{StaticResource CaptionText}"
+                                                       TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplaySource}" />
+                                            <TextBox Text="{Binding TargetPath, UpdateSourceTrigger=PropertyChanged}"
+                                                     AutomationProperties.Name="Percorso di destinazione"
+                                                     Margin="0,5,0,0" ToolTip="{Binding TargetPath}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Content="Rianalizza conflitti" Style="{StaticResource GhostButton}"
+                                    Command="{Binding AnalyzeRestoreCommand}" HorizontalAlignment="Left"
+                                    Padding="8,4" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="Conflitti" Style="{StaticResource SubtitleText}" />
+                            <TextBlock Text="La destinazione non viene cancellata senza una scelta esplicita."
+                                       Style="{StaticResource MutedText}" Margin="0,4,0,12" />
+                            <ComboBox SelectedIndex="{Binding ConflictPolicyIndex}"
+                                      AutomationProperties.Name="Politica per i conflitti">
+                                <ComboBoxItem Content="Sostituisci con copia preventiva" />
+                                <ComboBoxItem Content="Mantieni i file esistenti" />
+                                <ComboBoxItem Content="Salva entrambi" />
+                            </ComboBox>
+                            <CheckBox Content="Avvia gli installer ripristinati" IsChecked="{Binding RunInstallers}"
+                                      Margin="0,14,0,4" />
+                            <TextBlock Text="L'avvio è interattivo e richiede una tua conferma successiva nel programma di installazione."
+                                       Style="{StaticResource CaptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorder}">
+                        <StackPanel>
+                            <TextBlock Text="Controllo finale" Style="{StaticResource SubtitleText}" />
+                            <TextBlock Text="{Binding RestoreAnalysis}" Style="{StaticResource MutedText}"
+                                       Margin="0,8,0,14" />
+                            <Button Content="Avvia ripristino" Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding RestoreCommand}" HorizontalAlignment="Stretch" />
+                            <Button Content="Annulla operazione" Style="{StaticResource GhostButton}"
+                                    Command="{Binding CancelCommand}" Margin="0,6,0,0"
+                                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+                            <TextBlock Text="I file sostituiti vengono copiati nella cartella di rollback locale. Installazioni e attivazioni esterne possono non essere interamente annullabili."
+                                       Style="{StaticResource CaptionText}" TextWrapping="Wrap" Margin="0,14,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

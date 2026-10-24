@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MigraWin/MigraWin.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MigraWin.Tests/MigraWin.Tests.csproj" />
+  </Folder>
+</Solution>

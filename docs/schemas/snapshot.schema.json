@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://migrawin.local/schemas/snapshot.schema.json",
+  "title": "MigraWin decrypted snapshot manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "snapshotId", "repositoryId", "createdAt", "machineName", "createdBy", "profileName", "scope", "applications", "fileCount", "logicalBytes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "snapshotId": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+    "repositoryId": { "type": "string", "minLength": 1 },
+    "parentSnapshotId": { "type": ["string", "null"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "machineName": { "type": "string" },
+    "createdBy": { "type": "string" },
+    "profileName": { "type": "string" },
+    "scope": { "type": "string", "enum": ["Full", "Incremental", "Differential"] },
+    "fileCount": { "type": "integer", "minimum": 0 },
+    "logicalBytes": { "type": "integer", "minimum": 0 },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "applications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["installationId", "productId", "displayName", "version", "architecture", "source", "supportLevel", "components"],
+        "properties": {
+          "installationId": { "type": "string" },
+          "productId": { "type": "string" },
+          "displayName": { "type": "string" },
+          "publisher": { "type": "string" },
+          "version": { "type": "string" },
+          "architecture": { "type": "string" },
+          "source": { "type": "string" },
+          "installLocation": { "type": "string" },
+          "environmentId": { "type": "string" },
+          "supportLevel": {
+            "type": "string",
+            "enum": ["Detected", "Archivable", "OnlineReinstall", "OfflineReinstall", "VerifiedMigration"]
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "label", "root", "sensitive", "files"],
+              "properties": {
+                "kind": { "type": "string" },
+                "label": { "type": "string" },
+                "root": { "type": "string" },
+                "sensitive": { "type": "boolean" },
+                "emptyDirectories": { "type": "array", "items": { "type": "string" } },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["relativePath", "objectId", "length", "lastWriteTime"],
+                    "properties": {
+                      "relativePath": { "type": "string" },
+                      "objectId": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+                      "length": { "type": "integer", "minimum": 0 },
+                      "lastWriteTime": { "type": "string", "format": "date-time" },
+                      "attributes": { "type": "integer" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

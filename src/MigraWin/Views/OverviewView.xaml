@@ -1,0 +1,160 @@
+<UserControl x:Class="MigraWin.Views.OverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,24,28,32">
+            <Border Style="{StaticResource CardBorder}" Padding="28" Margin="0,0,0,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel MaxWidth="720" HorizontalAlignment="Left">
+                        <Border Style="{StaticResource Pill}" HorizontalAlignment="Left" Margin="0,0,0,16">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE72E;" Style="{StaticResource SymbolText}"
+                                           FontSize="14" Foreground="{DynamicResource AppAccentBrush}"
+                                           Margin="0,0,6,0" />
+                                <TextBlock Text="Locale · cifrato · verificato" Style="{StaticResource CaptionText}"
+                                           Foreground="{DynamicResource AppTextPrimaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="Il tuo ambiente di lavoro, pronto per il prossimo PC."
+                                   Style="{StaticResource TitleLargeText}" TextWrapping="Wrap" />
+                        <TextBlock Margin="0,12,0,22" MaxWidth="650" FontSize="15" LineHeight="23"
+                                   Foreground="{DynamicResource AppTextSecondaryBrush}" TextWrapping="Wrap"
+                                   Text="Scegli applicazioni, impostazioni e dati. MigraWin prepara un archivio autonomo, ne verifica l'integrità e ricostruisce solo ciò che approvi." />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Analizza questo PC" Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding AnalyzeCommand}" />
+                            <Button Content="Apri archivio" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding NavigateCommand}" CommandParameter="3" Margin="10,0,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Grid Grid.Column="1" Width="210" Height="180" Margin="28,0,0,0"
+                          VerticalAlignment="Center" Background="Transparent">
+                        <Ellipse Fill="{DynamicResource AppSelectionBrush}" Width="174" Height="174" />
+                        <Border Width="116" Height="136" CornerRadius="16"
+                                Background="{DynamicResource AppAccentBrush}"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid>
+                                <TextBlock Text="&#xE896;" FontFamily="{DynamicResource SymbolFont}" FontSize="54"
+                                           Foreground="{DynamicResource AppAccentTextBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Border Style="{StaticResource Pill}" Padding="7,3" Margin="0,0,0,18"
+                                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                        Background="{DynamicResource AppSurfaceBrush}">
+                                    <TextBlock Text="AES-GCM" FontSize="10" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource AppTextPrimaryBrush}" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <UniformGrid Columns="4" Margin="-6,0,-6,20">
+                <Border Style="{StaticResource CardBorder}" Margin="6" Padding="18">
+                    <StackPanel>
+                        <TextBlock Text="App rilevate" Style="{StaticResource CaptionText}" />
+                        <TextBlock Text="{Binding InstalledCountLabel}" FontSize="30" FontWeight="SemiBold"
+                                   Margin="0,5,0,2" />
+                        <TextBlock Text="Inventario del PC" Style="{StaticResource CaptionText}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}" Margin="6" Padding="18">
+                    <StackPanel>
+                        <TextBlock Text="Selezionate" Style="{StaticResource CaptionText}" />
+                        <TextBlock Text="{Binding SelectedCountLabel}" FontSize="30" FontWeight="SemiBold"
+                                   Margin="0,5,0,2" Foreground="{DynamicResource AppAccentBrush}" />
+                        <TextBlock Text="{Binding SelectedSizeLabel, StringFormat='{}{0} stimati'}"
+                                   Style="{StaticResource CaptionText}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}" Margin="6" Padding="18">
+                    <StackPanel>
+                        <TextBlock Text="Giochi esclusi" Style="{StaticResource CaptionText}" />
+                        <TextBlock Text="{Binding ExcludedGamesLabel}" FontSize="30" FontWeight="SemiBold"
+                                   Margin="0,5,0,2" />
+                        <TextBlock Text="Nessuna inclusione automatica" Style="{StaticResource CaptionText}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}" Margin="6" Padding="18">
+                    <StackPanel>
+                        <TextBlock Text="Ultimo backup" Style="{StaticResource CaptionText}" />
+                        <TextBlock Text="{Binding LastBackupLabel}" FontSize="20" FontWeight="SemiBold"
+                                   Margin="0,8,0,3" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="Archivio locale" Style="{StaticResource CaptionText}" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,10,0">
+                    <StackPanel>
+                        <TextBlock Text="Protezioni sempre attive" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="Il programma non nasconde un limite dietro un'etichetta di successo."
+                                   Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE72E;" Style="{StaticResource SymbolText}"
+                                       Foreground="{DynamicResource AppAccentBrush}" />
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Nessuna modifica durante l'analisi" Style="{StaticResource BodyStrongText}" />
+                                <TextBlock Text="Installer, script e programmi rilevati non vengono avviati." Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </Grid>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE73E;" Style="{StaticResource SymbolText}"
+                                       Foreground="{DynamicResource AppSuccessBrush}" />
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Archivio verificato prima del commit" Style="{StaticResource BodyStrongText}" />
+                                <TextBlock Text="Oggetti cifrati, manifest autenticato e nessuna copia parziale visibile." Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="32" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE777;" Style="{StaticResource SymbolText}"
+                                       Foreground="{DynamicResource AppWarningBrush}" />
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Ripristino selettivo e rollback" Style="{StaticResource BodyStrongText}" />
+                                <TextBlock Text="Una copia preventiva protegge i file sostituiti sulla destinazione." Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource CardBorder}" Margin="10,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Attività recente" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="Le operazioni non presidiate restano visibili." Style="{StaticResource MutedText}"
+                                   Margin="0,4,0,14" />
+                        <ItemsControl ItemsSource="{Binding Activities}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Glyph}" Style="{StaticResource SymbolText}" FontSize="15"
+                                                   Foreground="{DynamicResource AppAccentBrush}" />
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Title}" Style="{StaticResource BodyStrongText}" />
+                                            <TextBlock Text="{Binding Detail}" Style="{StaticResource CaptionText}"
+                                                       TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,185 @@
+<UserControl x:Class="MigraWin.Views.ArchiveView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="28,24,28,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock Text="Archivio dei backup" Style="{StaticResource TitleText}" />
+            <TextBlock Text="Ogni punto è autonomo nel manifest; gli oggetti condivisi sono protetti dalla deduplicazione."
+                       Style="{StaticResource MutedText}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="16" Margin="0,18,0,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="260" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="Cartella repository" Style="{StaticResource CaptionText}" Margin="0,0,0,5" />
+                    <TextBox Text="{Binding ArchivePath, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="Cartella repository"
+                             ToolTip="{Binding ArchivePath}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Password o chiave di recupero" Style="{StaticResource CaptionText}" Margin="0,0,0,5" />
+                    <PasswordBox x:Name="ArchivePasswordBox"
+                                 AutomationProperties.Name="Password o chiave di recupero"
+                                 PasswordChanged="ArchivePasswordBox_OnPasswordChanged" />
+                </StackPanel>
+                <Button Grid.Column="2" Content="Sfoglia…" Style="{StaticResource SecondaryButton}"
+                        Command="{Binding BrowseRepositoryCommand}" Margin="8,18,0,0" VerticalAlignment="Top" />
+                <Button Grid.Column="3" Content="Apri file…" Style="{StaticResource SecondaryButton}"
+                        Command="{Binding OpenPortableArchiveCommand}" Margin="8,18,0,0" VerticalAlignment="Top" />
+                <Button Grid.Column="4" Content="Apri repository" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding OpenRepositoryCommand}" Margin="8,18,0,0" VerticalAlignment="Top" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource SubtleCardBorder}" Margin="0,0,0,14"
+                Visibility="{Binding RepositoryOpened, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Nuova password" Style="{StaticResource CaptionText}" Margin="0,0,0,5" />
+                    <PasswordBox x:Name="NewRepositoryPasswordBox"
+                                 AutomationProperties.Name="Nuova password repository"
+                                 PasswordChanged="NewRepositoryPasswordBox_OnPasswordChanged" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Conferma nuova password" Style="{StaticResource CaptionText}" Margin="0,0,0,5" />
+                    <PasswordBox x:Name="NewRepositoryPasswordConfirmationBox"
+                                 AutomationProperties.Name="Conferma nuova password repository"
+                                 PasswordChanged="NewRepositoryPasswordConfirmationBox_OnPasswordChanged" />
+                </StackPanel>
+                <Button Grid.Column="3" Content="Cambia password" Style="{StaticResource SecondaryButton}"
+                        Command="{Binding ChangeRepositoryPasswordCommand}" Margin="12,18,0,0"
+                        VerticalAlignment="Top" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" MinWidth="330" MaxWidth="420" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Margin="2,0,2,9">
+                    <TextBlock Text="Punti di ripristino" Style="{StaticResource BodyStrongText}" />
+                    <Border Style="{StaticResource Pill}" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE73E;" Style="{StaticResource SymbolText}" FontSize="12"
+                                       Foreground="{DynamicResource AppSuccessBrush}" Margin="0,0,5,0" />
+                            <TextBlock Text="Repository cifrato" FontSize="11" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Snapshots}"
+                         SelectedItem="{Binding SelectedSnapshot}"
+                         ItemContainerStyle="{StaticResource AppListViewItem}"
+                         BorderThickness="0" Background="Transparent"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="44" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="120" />
+                                </Grid.ColumnDefinitions>
+                                <Border Width="36" Height="36" CornerRadius="8"
+                                        Background="{DynamicResource AppSelectionBrush}" VerticalAlignment="Top">
+                                    <TextBlock Text="&#xE896;" Style="{StaticResource SymbolText}"
+                                               Foreground="{DynamicResource AppAccentBrush}"
+                                               HorizontalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding ProfileName}" Style="{StaticResource BodyStrongText}" />
+                                    <TextBlock Text="{Binding ContentLabel}" Style="{StaticResource CaptionText}"
+                                               Margin="0,3,0,0" />
+                                    <TextBlock Text="{Binding MachineName}" Style="{StaticResource CaptionText}"
+                                               Margin="0,3,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding DateLabel}" Style="{StaticResource BodyStrongText}"
+                                               HorizontalAlignment="Right" />
+                                    <TextBlock Text="{Binding SizeLabel}" Style="{StaticResource CaptionText}"
+                                               HorizontalAlignment="Right" Margin="0,3,0,0" />
+                                    <TextBlock Text="{Binding ScopeLabel}" Style="{StaticResource CaptionText}"
+                                               HorizontalAlignment="Right" Margin="0,3,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Border Grid.Column="2" Style="{StaticResource CardBorder}">
+                <Grid>
+                    <StackPanel Visibility="{Binding SelectedSnapshot, Converter={StaticResource NullToVisibility}, ConverterParameter=inverse}"
+                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="&#xE8B7;" Style="{StaticResource SymbolText}" FontSize="38"
+                                   Foreground="{DynamicResource AppTextSecondaryBrush}" HorizontalAlignment="Center" />
+                        <TextBlock Text="Apri un repository" Style="{StaticResource SubtitleText}"
+                                   HorizontalAlignment="Center" Margin="0,12,0,4" />
+                        <TextBlock Text="I manifest restano cifrati finché non inserisci la chiave corretta."
+                                   Style="{StaticResource MutedText}" TextAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding SelectedSnapshot, Converter={StaticResource NullToVisibility}}">
+                        <TextBlock Text="{Binding SelectedSnapshot.ProfileName}" Style="{StaticResource SubtitleText}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding SelectedSnapshot.DateLabel}" Style="{StaticResource CaptionText}"
+                                   Margin="0,4,0,18" />
+                        <Border Style="{StaticResource SubtleCardBorder}" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="Applicazioni" Style="{StaticResource CaptionText}" />
+                                    <TextBlock Text="{Binding SelectedSnapshot.ApplicationCount}" HorizontalAlignment="Right"
+                                               Style="{StaticResource BodyStrongText}" />
+                                </Grid>
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="File logici" Style="{StaticResource CaptionText}" />
+                                    <TextBlock Text="{Binding SelectedSnapshot.FileCount}" HorizontalAlignment="Right"
+                                               Style="{StaticResource BodyStrongText}" />
+                                </Grid>
+                                <Grid>
+                                    <TextBlock Text="Dimensione logica" Style="{StaticResource CaptionText}" />
+                                    <TextBlock Text="{Binding SelectedSnapshot.SizeLabel}" HorizontalAlignment="Right"
+                                               Style="{StaticResource BodyStrongText}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <Button Content="Prepara il ripristino" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding PrepareRestoreCommand}" HorizontalAlignment="Stretch" />
+                        <Button Content="Verifica integrità" Style="{StaticResource SecondaryButton}"
+                                Command="{Binding VerifySnapshotCommand}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                        <Button Content="Esporta archivio autonomo…" Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ExportSnapshotCommand}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                        <Button Content="Elimina questo backup" Style="{StaticResource DangerButton}"
+                                Command="{Binding DeleteSnapshotCommand}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                        <TextBlock Style="{StaticResource CaptionText}" TextWrapping="Wrap" Margin="0,16,0,0"
+                                   Text="L'eliminazione rimuove il manifest e solo gli oggetti non raggiungibili dagli altri backup." />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,10 @@
+.dotnet/
+.tools*/
+.wix/
+**/bin/
+**/obj/
+artifacts/
+.vs/
+TestResults/
+*.user
+*.suo

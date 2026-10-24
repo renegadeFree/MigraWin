@@ -1,0 +1,130 @@
+<UserControl x:Class="MigraWin.Views.ComparisonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="28,24,28,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <StackPanel>
+                <TextBlock Text="Confronto tra copie" Style="{StaticResource TitleText}" />
+                <TextBlock Text="Individua applicazioni, versioni e contenuti che differiscono tra due punti di ripristino."
+                           Style="{StaticResource MutedText}" Margin="0,4,0,0" />
+            </StackPanel>
+            <Button Content="Apri archivio" Style="{StaticResource SecondaryButton}"
+                    Command="{Binding NavigateCommand}" CommandParameter="3"
+                    HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </Grid>
+
+        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="16" Margin="0,18,0,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="34" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Da" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                    <ComboBox ItemsSource="{Binding Snapshots}"
+                              SelectedItem="{Binding ComparisonFromSnapshot}"
+                              AutomationProperties.Name="Snapshot di partenza">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding ProfileName}" />
+                                    <TextBlock Text="{Binding DateLabel}" Style="{StaticResource CaptionText}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <TextBlock Grid.Column="1" Text="&#xE72A;" Style="{StaticResource SymbolText}"
+                           HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" />
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="A" Style="{StaticResource CaptionText}" Margin="0,0,0,6" />
+                    <ComboBox ItemsSource="{Binding Snapshots}"
+                              SelectedItem="{Binding ComparisonToSnapshot}"
+                              AutomationProperties.Name="Snapshot di arrivo">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding ProfileName}" />
+                                    <TextBlock Text="{Binding DateLabel}" Style="{StaticResource CaptionText}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <Button Grid.Column="3" Content="Confronta" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding CompareSnapshotsCommand}" Margin="12,18,0,0"
+                        VerticalAlignment="Top" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" MinWidth="280" MaxWidth="380" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource CardBorder}" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Padding="18,14" BorderBrush="{DynamicResource AppStrokeBrush}" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <TextBlock Text="Variazioni rilevate" Style="{StaticResource SubtitleText}" />
+                            <TextBlock Text="{Binding ComparisonSummary}" HorizontalAlignment="Right"
+                                       Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding ComparisonChanges}"
+                             BorderThickness="0" Background="Transparent" Padding="14"
+                             ItemContainerStyle="{StaticResource AppListViewItem}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="34" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Glyph}" Style="{StaticResource SymbolText}"
+                                               Foreground="{DynamicResource AppTextSecondaryBrush}" />
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="{Binding Title}" Style="{StaticResource BodyStrongText}" />
+                                        <TextBlock Text="{Binding Detail}" Style="{StaticResource CaptionText}"
+                                                   TextWrapping="Wrap" Margin="0,3,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+            <StackPanel Grid.Column="2">
+                <Border Style="{StaticResource SubtleCardBorder}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Come viene letto" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Style="{StaticResource MutedText}" Margin="0,6,0,0"
+                                   Text="Una voce rimossa significa che non compare nella copia di arrivo. Non implica che sia stata cancellata dal PC dopo il punto di ripristino." />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="Rapporto" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="Il confronto viene salvato in Markdown insieme agli altri rapporti."
+                                   Style="{StaticResource MutedText}" Margin="0,4,0,12" />
+                        <Button Content="Apri cartella rapporti" Style="{StaticResource SecondaryButton}"
+                                Command="{Binding OpenReportsFolderCommand}" HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

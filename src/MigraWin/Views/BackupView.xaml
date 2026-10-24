@@ -1,0 +1,250 @@
+<UserControl x:Class="MigraWin.Views.BackupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:MigraWin.Models">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="28,24,28,32">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="520" />
+                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="1*" MinWidth="320" MaxWidth="420" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Componi il backup" Style="{StaticResource TitleText}" />
+                <TextBlock Text="Contenuto, recuperabilità e conservazione restano scelte separate."
+                           Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Profilo di contenuto" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="La scelta viene applicata a tutte le applicazioni, poi puoi personalizzarla nell'inventario."
+                                   Style="{StaticResource MutedText}" Margin="0,4,0,14" />
+                        <WrapPanel>
+                            <Button Content="Solo inventario" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="{x:Static models:BackupPreset.InventoryOnly}" Margin="0,0,8,8" />
+                            <Button Content="Solo impostazioni" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="{x:Static models:BackupPreset.SettingsOnly}" Margin="0,0,8,8" />
+                            <Button Content="Solo dati" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="{x:Static models:BackupPreset.DataOnly}" Margin="0,0,8,8" />
+                            <Button Content="Solo pacchetti" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="{x:Static models:BackupPreset.PackageOnly}" Margin="0,0,8,8" />
+                            <Button Content="Impostazioni e dati" Style="{StaticResource SecondaryButton}"
+                                    Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="{x:Static models:BackupPreset.SettingsAndData}" Margin="0,0,8,8" />
+                            <Button Content="Completo supportato" Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="{x:Static models:BackupPreset.FullSupported}" Margin="0,0,8,8" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Identità del backup" Style="{StaticResource SubtitleText}" />
+                        <Grid Grid.Row="1" Margin="0,14,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="12" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Nome profilo" Style="{StaticResource BodyStrongText}" Margin="0,0,0,6" />
+                                <TextBox Text="{Binding ProfileName, UpdateSourceTrigger=PropertyChanged}"
+                                         AutomationProperties.Name="Nome profilo" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Repository di destinazione" Style="{StaticResource BodyStrongText}" Margin="0,0,0,6" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Text="{Binding BackupDestination, UpdateSourceTrigger=PropertyChanged}"
+                                             AutomationProperties.Name="Repository di destinazione"
+                                             ToolTip="{Binding BackupDestination}" />
+                                    <Button Grid.Column="1" Content="Sfoglia…" Style="{StaticResource SecondaryButton}"
+                                            Command="{Binding BrowseBackupDestinationCommand}" Margin="8,0,0,0" />
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Grid.Row="2" Margin="0,15,0,0">
+                            <TextBlock Text="Modalità temporale" Style="{StaticResource BodyStrongText}" Margin="0,0,0,7" />
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="Incrementale con deduplicazione" IsChecked="{Binding IsIncremental}" Margin="0,0,20,0" />
+                                <RadioButton Content="Differenziale dalla copia più recente"
+                                             IsChecked="{Binding IsDifferential}" Margin="0,0,20,0" />
+                                <RadioButton Content="Completa logica"
+                                             IsChecked="{Binding IsIncremental, Converter={StaticResource InverseBoolean}}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Grid.Row="3" Style="{StaticResource MutedText}" Margin="0,10,0,0"
+                                   Text="Entrambe le modalità producono un manifest autonomo; gli oggetti identici vengono conservati una sola volta." />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="Protezione dell'archivio" Style="{StaticResource SubtitleText}" />
+                                <TextBlock Text="La password protegge la chiave dei contenuti; non viene mai salvata nel profilo."
+                                           Style="{StaticResource MutedText}" Margin="0,4,0,0" />
+                            </StackPanel>
+                            <Border Style="{StaticResource Pill}" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE72E;" Style="{StaticResource SymbolText}" FontSize="13"
+                                               Margin="0,0,5,0" Foreground="{DynamicResource AppSuccessBrush}" />
+                                    <TextBlock Text="AES-256-GCM" FontSize="11" FontWeight="SemiBold" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="0,15,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="12" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Password (minimo 10 caratteri)" Style="{StaticResource BodyStrongText}" Margin="0,0,0,6" />
+                                <PasswordBox x:Name="BackupPasswordBox"
+                                             AutomationProperties.Name="Password backup"
+                                             PasswordChanged="BackupPasswordBox_OnPasswordChanged" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Conferma password" Style="{StaticResource BodyStrongText}" Margin="0,0,0,6" />
+                                <PasswordBox x:Name="BackupPasswordConfirmationBox"
+                                             AutomationProperties.Name="Conferma password backup"
+                                             PasswordChanged="BackupPasswordConfirmationBox_OnPasswordChanged" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Conservazione" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="La copia appena verificata e quella protetta non vengono mai eliminate automaticamente."
+                                   Style="{StaticResource MutedText}" Margin="0,4,0,12" />
+                        <ComboBox SelectedIndex="{Binding RetentionChoiceIndex}" Width="320" HorizontalAlignment="Left"
+                                  AutomationProperties.Name="Politica di conservazione">
+                            <ComboBoxItem Content="Mantieni gli ultimi 10 backup" />
+                            <ComboBoxItem Content="Mantieni gli ultimi 20 backup" />
+                            <ComboBoxItem Content="Mantieni gli ultimi 50 backup" />
+                            <ComboBoxItem Content="Non applicare una politica automatica" />
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Esecuzione pianificata" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="Esegue il profilo ogni giorno mentre l'utente Windows è disponibile."
+                                   Style="{StaticResource MutedText}" Margin="0,4,0,12" />
+                        <CheckBox Content="Attiva backup giornaliero"
+                                  IsChecked="{Binding ScheduleEnabled}"
+                                  AutomationProperties.Name="Attiva backup giornaliero" />
+                        <Grid Margin="0,12,0,0" IsEnabled="{Binding ScheduleEnabled}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="88" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Ora locale" VerticalAlignment="Center" Margin="0,0,10,0" />
+                            <TextBox Grid.Column="1" Text="{Binding ScheduleTime, UpdateSourceTrigger=PropertyChanged}"
+                                     AutomationProperties.Name="Ora del backup pianificato" />
+                        </Grid>
+                        <TextBlock Text="{Binding ScheduleStatus}" Style="{StaticResource CaptionText}"
+                                   TextWrapping="Wrap" Margin="0,10,0,0" />
+                        <TextBlock Text="La password viene protetta con DPAPI per l'utente corrente. Non viene scritta nell'attività né esportata nel profilo."
+                                   Style="{StaticResource CaptionText}" TextWrapping="Wrap" Margin="0,5,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Piano corrente" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="{Binding SelectedAppsSummary}" Foreground="{DynamicResource AppAccentBrush}"
+                                   FontSize="20" FontWeight="SemiBold" Margin="0,12,0,3" />
+                        <TextBlock Text="{Binding BackupReadinessText}" Style="{StaticResource MutedText}"
+                                   Margin="0,0,0,14" />
+                        <TextBlock Text="{Binding ScheduleStatus}" Style="{StaticResource CaptionText}"
+                                   TextWrapping="Wrap" Margin="0,-6,0,14" />
+                        <ListBox ItemsSource="{Binding SelectedApplications}" MaxHeight="250"
+                                 BorderThickness="0" Background="Transparent"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0,0,0,8" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <ContentPresenter />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="{Binding DisplayName}" Style="{StaticResource BodyStrongText}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock HorizontalAlignment="Right" Style="{StaticResource CaptionText}"
+                                                   Text="{Binding SupportLabel}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock Text="Se non vedi un componente, torna all'inventario e personalizza l'applicazione."
+                                   Style="{StaticResource CaptionText}" Margin="0,6,0,14" />
+                        <Button Content="Crea e verifica backup" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding CreateBackupCommand}" HorizontalAlignment="Stretch" />
+                        <Button Content="Annulla operazione" Style="{StaticResource GhostButton}"
+                                Command="{Binding CancelCommand}" Margin="0,6,0,0"
+                                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource SubtleCardBorder}" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="Prima del commit" Style="{StaticResource BodyStrongText}" Margin="0,0,0,10" />
+                        <TextBlock Text="1  Manifest e schemi versionati" Style="{StaticResource MutedText}" Margin="0,0,0,6" />
+                        <TextBlock Text="2  Acquisizione in area temporanea" Style="{StaticResource MutedText}" Margin="0,0,0,6" />
+                        <TextBlock Text="3  Verifica di identità e hash" Style="{StaticResource MutedText}" Margin="0,0,0,6" />
+                        <TextBlock Text="4  Pubblicazione atomica nel repository" Style="{StaticResource MutedText}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardBorder}"
+                        Visibility="{Binding HasRecoveryKey, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel>
+                        <TextBlock Text="Chiave di recupero" Style="{StaticResource SubtitleText}" />
+                        <TextBlock Text="Mostrata solo alla creazione del repository. Conservala fuori dal disco di backup."
+                                   Style="{StaticResource MutedText}" Margin="0,4,0,10" />
+                        <TextBox Text="{Binding RecoveryKey}" IsReadOnly="True" TextWrapping="Wrap"
+                                 FontFamily="Consolas" Margin="0,0,0,8" />
+                        <Button Content="Copia chiave" Style="{StaticResource SecondaryButton}"
+                                Command="{Binding CopyRecoveryKeyCommand}" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

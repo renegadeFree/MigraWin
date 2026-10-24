@@ -1,0 +1,84 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+      Name="MigraWin"
+      Manufacturer="Paolo"
+      Version="1.4.0"
+      UpgradeCode="CC4C6A0F-EEDE-46CF-BC59-77519C9E48E3"
+      Scope="perUser"
+      Compressed="yes"
+      InstallerVersion="500">
+
+    <SummaryInformation
+        Description="Backup e migrazione trasparente dell'ambiente applicativo Windows"
+        Manufacturer="Paolo" />
+    <MajorUpgrade
+        DowngradeErrorMessage="Una versione più recente di MigraWin è già installata."
+        Schedule="afterInstallValidate" />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="MigraWinIcon" SourceFile="src\MigraWin\Assets\MigraWin.ico" />
+    <Property Id="ARPPRODUCTICON" Value="MigraWinIcon" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
+    <Launch Condition="Installed OR VersionNT64"
+            Message="MigraWin richiede Windows 11 a 64 bit." />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="LocalProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="MigraWin">
+          <Component Id="ApplicationFiles" Guid="D2B00C61-5E8E-49AC-9E0D-5F18E0CA98B8">
+            <File Id="MigraWinExe"
+                  Source="artifacts\publish\MigraWin.exe"
+                  KeyPath="yes">
+              <Shortcut Id="ApplicationStartMenuShortcut"
+                        Directory="MigraWinProgramsFolder"
+                        Name="MigraWin"
+                        Description="Backup e migrazione Windows"
+                        WorkingDirectory="INSTALLFOLDER" />
+            </File>
+            <RegistryValue Root="HKCU"
+                           Key="Software\MigraWin"
+                           Name="InstallLocation"
+                           Type="string"
+                           Value="[INSTALLFOLDER]" />
+          </Component>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="MigraWinProgramsFolder" Name="MigraWin">
+        <Component Id="StartMenuFolder" Guid="A90FBB54-272F-4F52-9104-EC80E9F91C7B">
+          <RemoveFolder Id="RemoveMigraWinProgramsFolder" On="uninstall" />
+          <RegistryValue Root="HKCU"
+                         Key="Software\MigraWin"
+                         Name="StartMenu"
+                         Type="integer"
+                         Value="1"
+                         KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="ProductFeature" Title="MigraWin" Level="1">
+      <ComponentRef Id="ApplicationFiles" />
+      <ComponentRef Id="StartMenuFolder" />
+    </Feature>
+
+    <CustomAction Id="RemoveSchedules"
+                  FileRef="MigraWinExe"
+                  ExeCommand="--remove-schedules"
+                  Execute="deferred"
+                  Impersonate="yes"
+                  Return="ignore" />
+    <InstallExecuteSequence>
+      <Custom Action="RemoveSchedules"
+              Before="RemoveFiles"
+              Condition="REMOVE=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE" />
+    </InstallExecuteSequence>
+
+    <WixVariable Id="WixUILicenseRtf" Value="installer\License.rtf" />
+    <ui:WixUI Id="WixUI_InstallDir" />
+  </Package>
+</Wix>
