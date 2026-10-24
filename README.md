@@ -107,7 +107,7 @@ Get-FileHash .\MigraWin-1.10.0-x64.msi -Algorithm SHA256
 Hash SHA-256 della release 1.10.0:
 
 ```text
-Il valore aggiornato è pubblicato anche in SHA256SUMS.txt nella release.
+648374430F8037BDCBF2E4CF89ED4D42DDE169F6365CC4FF8036D62B30B7DB6B
 ```
 
 > **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.

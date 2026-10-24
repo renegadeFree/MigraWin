@@ -81,18 +81,18 @@ Ulteriori verifiche effettuate:
 - `dotnet list package --vulnerable --include-transitive`: nessun pacchetto vulnerabile;
 - build Debug e Release senza errori;
 - MSI installato con codice 0;
-- avvio del binario self-contained installato dalla release 1.9.0, finestra responsiva.
+- avvio del binario self-contained installato dalla release 1.10.0, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
 - icone applicazione estratte dal PC e galleria promozionale ufficiale verificate visivamente in Visual Studio Code;
 - icona fornita e modernizzata verificata nell'API, nell'eseguibile e nella finestra installata;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.9.0`;
-- GitHub Action della release `v1.9.0` completata con esito `success`;
-- Windows CI sul commit `5aa67ce` completata con esito `success`: build, test, installazione MSI, self-check, menu Start, collegamento Desktop e disinstallazione;
-- MSI pubblico v1.9.0 scaricato e verificato: 60.080.128 byte, SHA-256 `B425A8D510ADF3E18227D3E860FAED544F05B9632B8870D0D5F82F3BDDBC92AD`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.10.0`;
+- GitHub Action della release `v1.10.0` completata con esito `success`;
+- Windows CI sul commit `3509c69` completata con esito `success`: build, test, installazione MSI, self-check, menu Start, collegamento Desktop e disinstallazione;
+- MSI pubblico v1.10.0 scaricato e verificato: 60.080.128 byte, SHA-256 `648374430F8037BDCBF2E4CF89ED4D42DDE169F6365CC4FF8036D62B30B7DB6B`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
-- release pubblica `v1.9.0` installata con codice 0 e avviata correttamente;
+- release pubblica `v1.10.0` installata con codice 0 e avviata correttamente;
 - collegamento Desktop verificato prima dell'installazione, dopo l'installazione e dopo la disinstallazione;
 - scansione reale con applicazioni e strumenti, inclusi script personali e configurazioni locali;
 - strumenti verificati nell'inventario: Enter for rename, PM2, n8n, Pi Agent e Proxy DeepSeek per Codex;
@@ -103,6 +103,8 @@ Ulteriori verifiche effettuate:
 - persistenza di `settings.json` verificata dal test automatico.
 - cambio lingua verificato a runtime in inglese, cinese, giapponese, coreano, spagnolo, turco, russo, greco, francese e tedesco;
 - ritorno all'italiano e persistenza della scelta in `settings.json` verificati.
+- pannello dettagli ridimensionato via tastiera da 360 a 440 pixel e verificato visivamente;
+- Nilesoft Shell ed ExplorerBlurMica rilevati nell'inventario con i rispettivi componenti di configurazione e dati.
 - backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
 ## Prossimi incrementi
