@@ -40,6 +40,8 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Adattatore Notepad++ verificato end-to-end con backup cifrato e ripristino isolato.
 - [x] Layout verificado a 820×540 con navigazione compatta e scorrimento accessibile.
 - [x] Percorso UI Git verificato interattivamente: selezione, backup, conferma, preparazione e ripristino.
+- [x] README riorganizzato con obiettivi espliciti, flusso d'uso, perimetro e limiti dichiarati.
+- [x] Schermate reali dell'app aggiunte per panoramica, inventario, backup e aggiornamenti.
 
 ## Collaudi eseguiti
 

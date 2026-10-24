@@ -1,5 +1,10 @@
 # Changelog
 
+## Non ancora rilasciato
+
+- README riorganizzato per spiegare obiettivi, flusso d'uso, limiti e privacy prima dei dettagli tecnici;
+- aggiunte schermate reali di panoramica, inventario, backup e aggiornamenti.
+
 ## 1.4.4 — 24 ottobre 2026
 
 - verifica aggiornamenti tramite la pagina pubblica GitHub Releases;

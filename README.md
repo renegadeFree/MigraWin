@@ -1,104 +1,149 @@
 # MigraWin
 
+**Backup e migrazione delle applicazioni Windows, con controllo, crittografia e ripristino selettivo.**
+
 [![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
 
-MigraWin è un'applicazione desktop Windows per inventariare il software installato, scegliere componenti da conservare, creare un repository cifrato e ripristinare i contenuti su un altro PC.
+[Scarica MigraWin 1.4.4](https://github.com/renegadeFree/MigraWin/releases/download/v1.4.4/MigraWin-1.4.4-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
 
-## Cosa include questa versione
+[![Panoramica di MigraWin](docs/images/panoramica.png)](docs/images/panoramica.png)
 
-- inventario del registro a 32/64 bit e dei pacchetti Microsoft Store/MSIX;
-- ricerca, filtri, selezione multipla e personalizzazione per applicazione;
-- aggiunta manuale di eseguibili portabili;
-- esclusione dei giochi e supporto esplicito agli applicativi riconosciuti;
-- profili esportabili e importabili senza credenziali;
-- libreria di installer locali con SHA-256 e rilevamento della firma;
-- repository deduplicato con oggetti cifrati AES-256-GCM, manifest autenticati e chiave di recupero;
-- cambio password senza riscrivere gli oggetti cifrati;
-- backup incrementale o differenziale, verifica degli oggetti e conservazione condivisa;
-- politica di conservazione configurabile ed esportazione/importazione di un archivio `.migrawin` autonomo;
-- confronto visuale tra snapshot con rapporto Markdown;
-- pianificazione giornaliera con credenziale protetta tramite DPAPI;
-- ripristino selettivo per applicazione e componente;
-- mappatura dei percorsi, tre politiche di conflitto e copia preventiva per il rollback;
-- rapporti Markdown e JSON, cronologia persistente SQLite;
-- interfaccia Fluent chiara/scura, navigazione da tastiera e distribuzione MSI x64 self-contained.
+## Che cos'è MigraWin
 
-## Avvio
+Quando si cambia o si reinstalla un PC, reinstallare a mano applicazioni e configurazioni richiede tempo e porta facilmente a dimenticare qualcosa.
 
-L'installer è generato in:
+MigraWin crea una fotografia del computer a livello di applicazioni: mostra cosa è installato, permette di scegliere esattamente quali impostazioni, dati e installer conservare, quindi salva il risultato in un archivio cifrato e verificato. Sul nuovo PC si ripristina solo ciò che si approva.
 
-```text
-artifacts\installer\MigraWin-1.4.4-x64.msi
+Non è un clone del disco e non reinstalla Windows. È uno strumento locale, senza account cloud e senza telemetria.
+
+## Obiettivi
+
+- **Rendere visibile l'installato**: raccogliere applicazioni del Registro Windows, a 32 e 64 bit, e pacchetti Microsoft Store/MSIX.
+- **Evitare copie indiscriminate**: scegliere per ogni applicazione solo le componenti utili.
+- **Proteggere il trasferimento**: cifrare i contenuti, verificare l'integrità e permettere il recupero senza dipendere da un'unica password.
+- **Ripristinare con controllo**: applicare mappature dei percorsi, gestire i conflitti e conservare una copia di rollback.
+- **Essere trasparente**: dichiarare il livello di supporto reale invece di presentare ogni applicazione come migrabile automaticamente.
+
+## Come funziona
+
+```mermaid
+flowchart LR
+    A[PC attuale] --> B[Inventario]
+    B --> C[Scelta di app e componenti]
+    C --> D[Backup cifrato e verificato]
+    D --> E[Repository o file .migrawin]
+    E --> F[Nuovo PC]
+    F --> G[Ripristino selettivo]
 ```
 
-L'installazione è per l'utente corrente e non richiede privilegi amministrativi. L'app viene installata in `%LOCALAPPDATA%\Programs\MigraWin`.
+1. **Analizza il PC.** MigraWin legge l'inventario e indica quali applicazioni sono riconosciute, reinstallabili o solo rilevate.
+2. **Scegli il contenuto.** Seleziona applicazioni e componenti; puoi aggiungere cartelle dati e programmi portabili.
+3. **Crea il backup.** Scegli una destinazione e una password di almeno 10 caratteri. Al primo backup conserva la chiave di recupero fuori dal disco del repository.
+4. **Trasferisci l'archivio.** Porta sul nuovo PC la cartella del repository oppure il singolo file `.migrawin`.
+5. **Ripristina.** Controlla destinazioni e conflitti, quindi avvia un ripristino parziale o completo.
 
-L'app non contiene account cloud né telemetria. L'analisi e i backup operano localmente.
+## Dentro l'app
 
-## Uso essenziale
+### Inventario e scelta delle componenti
 
-1. Apri **Inventario** e scegli **Analizza PC**.
-2. Seleziona applicazioni e componenti; i giochi restano esclusi.
-3. Apri **Backup**, scegli un profilo, la destinazione e una password di almeno 10 caratteri.
-4. Al primo backup conserva la chiave di recupero fuori dal disco del repository.
-5. Apri **Archivio** sul nuovo PC, seleziona il file `.migrawin` o la cartella e inserisci la password o la chiave di recupero.
-6. Prepara il ripristino, controlla mappature e conflitti, quindi avvia.
+Cerca per nome, produttore o versione, poi decidi se includere impostazioni, dati, installer, file installati e configurazioni sensibili.
 
-Il manuale completo è in [docs/MANUALE.md](docs/MANUALE.md).
+[![Inventario applicazioni in MigraWin](docs/images/inventario.png)](docs/images/inventario.png)
+
+### Backup leggibile prima di essere avviato
+
+Il profilo di contenuto, la destinazione, la modalità incrementale e la conservazione restano scelte separate. Prima del salvataggio, MigraWin verifica manifest, hash e integrità degli oggetti.
+
+[![Configurazione backup in MigraWin](docs/images/backup.png)](docs/images/backup.png)
+
+### Aggiornamenti semplici
+
+Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pubblica, scarica l'MSI solo dopo conferma e verifica il file con `SHA256SUMS.txt` prima di avviare l'installazione.
+
+[![Controllo aggiornamenti in MigraWin](docs/images/aggiornamenti.png)](docs/images/aggiornamenti.png)
+
+## Funzioni principali
+
+| Area | Cosa offre |
+| --- | --- |
+| Inventario | Registro Windows a 32/64 bit, Store/MSIX, ricerca, filtri, selezione multipla e applicazioni portabili |
+| Selezione | Componenti per applicazione, cartelle dati aggiuntive, esclusioni persistenti e profili importabili/esportabili |
+| Backup | Copia completa, incrementale o differenziale con deduplicazione |
+| Protezione | Oggetti AES-256-GCM, manifest autenticati, password PBKDF2 e chiave di recupero indipendente |
+| Ripristino | Selezione per app e componente, mappatura percorsi, politiche di conflitto e copie di rollback |
+| Archivio | Verifica, cambio password, conservazione configurabile ed esportazione `.migrawin` |
+| Automazione | Backup giornaliero tramite Utilità di pianificazione con credenziale protetta da DPAPI |
+| Trasparenza | Rapporti Markdown/JSON, cronologia SQLite e confronto tra snapshot |
+| Interfaccia | Tema chiaro/scuro, navigazione da tastiera, layout compatto e MSI per l'utente corrente |
+
+## Installazione
+
+Requisiti: **Windows 11 x64**.
+
+1. Scarica [MigraWin 1.4.4 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.4.4/MigraWin-1.4.4-x64.msi).
+2. Apri l'MSI. L'installazione avviene per l'utente corrente e non richiede privilegi amministrativi.
+3. Avvia MigraWin dal menu Start.
+
+Puoi verificare il download:
+
+```powershell
+Get-FileHash .\MigraWin-1.4.4-x64.msi -Algorithm SHA256
+```
+
+Hash SHA-256 della release 1.4.4:
+
+```text
+227B83EF4075E0EBD511AB83F5977B0C9FBD26FFEC9DF939535BBD1CFE534188
+```
+
+> **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.
+
+## Privacy e sicurezza
+
+- I dati restano sul PC: non ci sono account, cloud o telemetria.
+- La password non viene salvata nei profili; dal secondo accesso serve la password oppure la chiave di recupero.
+- Le configurazioni che possono contenere token o password sono escluse per impostazione predefinita.
+- Le credenziali delle applicazioni non vengono estratte automaticamente.
+- Gli archivi importati sono controllati contro percorsi malevoli, traversal e collegamenti simbolici.
+- Gli aggiornamenti vengono accettati solo dopo verifica del checksum pubblicato.
 
 ## Supporto dichiarato
 
-Il catalogo incluso riconosce configurazioni specifiche per Visual Studio Code, Windows Terminal, Git, PowerShell, Notepad++, OBS Studio, Paint.NET, LibreOffice, FileZilla e Sublime Text. Le altre applicazioni restano rilevabili: file e cartelle personalizzate possono essere archiviati, senza dichiarare automaticamente una reinstallazione o migrazione verificata.
+Il catalogo riconosce configurazioni specifiche per Visual Studio Code, Windows Terminal, Git, PowerShell, Notepad++, OBS Studio, Paint.NET, LibreOffice, FileZilla e Sublime Text.
 
-I videogiochi non vengono inclusi automaticamente. Un installer importato soddisfa il requisito offline solo per quel determinato applicativo e file.
+Essere riconosciuta non significa che ogni dato possa essere trasferito automaticamente. Le prove end-to-end più estese riguardano Git e Notepad++; per le altre applicazioni il livello effettivo è mostrato nell'inventario. Le applicazioni non riconosciute possono comunque essere archiviate tramite cartelle esplicite.
 
-## Sviluppo e build
+## Limiti e perimetro
 
-Requisiti di build:
+- Non crea immagini del disco e non clona Windows.
+- Non reinstalla automaticamente un'applicazione se non è disponibile un installer o un meccanismo di reinstallazione adatto.
+- Non garantisce il trasferimento di credenziali, licenze o configurazioni non dichiarate come supportate.
+- I giochi non vengono inclusi automaticamente.
+- Sono fuori perimetro WSL, container Docker e macchine virtuali.
+- Windows 10 e Windows ARM64 non sono dichiarati supportati.
+- La release 1.4.4 non è firmata con un certificato Authenticode.
 
-- Windows 11 x64;
-- .NET 10 SDK;
-- PowerShell.
+## Sviluppo e collaudo
 
-Con il runtime locale in `.dotnet`:
+Requisiti: Windows 11 x64, .NET 10 SDK e PowerShell.
 
 ```powershell
 .\build.ps1
 ```
 
-Oppure, con .NET 10 SDK nel `PATH`:
+Il comando compila l'app, esegue il collaudo, genera l'MSI e, se è disponibile un certificato configurato, firma exe e installer.
+
+Per eseguire solo i test:
 
 ```powershell
-dotnet tool restore
-dotnet publish src\MigraWin\MigraWin.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o artifacts\publish
-dotnet tool run wix extension add WixToolset.UI.wixext/6.0.2
-dotnet tool run wix build installer\MigraWin.wxs -ext WixToolset.UI.wixext -arch x64 -o artifacts\installer\MigraWin-1.4.4-x64.msi
+dotnet run --project tests\MigraWin.Tests\MigraWin.Tests.csproj -c Release
 ```
 
-## Collaudi
+La suite copre crittografia, password errata, recupero, deduplicazione, backup incrementale e differenziale, archivi `.migrawin`, percorsi ostili, conservazione, DPAPI, pianificazione, conflitti, rollback e rilevamento di oggetti manomessi.
 
-```powershell
-dotnet run --project tests\MigraWin.Tests\MigraWin.Tests.csproj
-```
+## Documentazione
 
-Il collaudo verifica cambio password, password errata, chiave di recupero, lock concorrente, deduplicazione, modalità differenziale, confronto, archivi autonomi, conservazione, esclusione dei segreti, profili, cronologia SQLite, DPAPI, creazione e rimozione dell'attività pianificata, esecuzione headless e rifiuto di oggetti o percorsi manomessi.
-
-## Aggiornamenti
-
-In **Impostazioni** il programma confronta la versione installata con l'ultima release pubblica GitHub. Un aggiornamento può essere scaricato solo dopo conferma; MigraWin verifica l'MSI tramite `SHA256SUMS.txt`, avvia l'installer e si chiude.
-
-Gli installer aggiornati vengono conservati in `Downloads\MigraWinUpdates`.
-
-## Firma dei rilasci
-
-Impostando `MIGRAWIN_SIGN_PFX` e `MIGRAWIN_SIGN_PFX_PASSWORD`, oppure `MIGRAWIN_SIGN_CERT_THUMBPRINT`, `build.ps1` firma e verifica Authenticode sia `MigraWin.exe` sia il pacchetto MSI. La GitHub Action usa automaticamente i secret `MIGRAWIN_SIGN_PFX_BASE64` e `MIGRAWIN_SIGN_PFX_PASSWORD` quando configurati. Senza un certificato valido la build resta possibile, ma la release è dichiarata non firmata.
-
-## Limiti noti
-
-- Ripristino e acquisizione sono collaudati su Windows 11 x64; Windows ARM64 e Windows 10 non sono dichiarati supportati.
-- Le credenziali non vengono estratte o trasferite automaticamente. Alcuni applicativi richiederanno una nuova autenticazione.
-- Le copie integrali di `Program Files`, `WindowsApps` e del registro non sono considerate reinstallazioni portabili.
-- Gli installer di terze parti non sono firmati da MigraWin e devono essere importati da una fonte attendibile.
-- Il pacchetto MSI non è firmato con un certificato di code signing di distribuzione.
-- Trasferimento diretto PC-PC e VSS avanzato non fanno parte di questa consegna.
-- WSL, container Docker e macchine virtuali sono esplicitamente fuori dal perimetro del prodotto.
+- [Manuale utente](docs/MANUALE.md)
+- [Formato del repository](docs/REPOSITORY_FORMAT.md)
+- [Changelog](CHANGELOG.md)
+- [Piano di sviluppo](PLAN.md)
