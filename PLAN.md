@@ -42,6 +42,10 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Percorso UI Git verificato interattivamente: selezione, backup, conferma, preparazione e ripristino.
 - [x] README riorganizzato con obiettivi espliciti, flusso d'uso, perimetro e limiti dichiarati.
 - [x] Schermate reali dell'app aggiunte per panoramica, inventario, backup e aggiornamenti.
+- [x] Icone locali per le applicazioni, con fallback a monogramma.
+- [x] Galleria separata delle immagini promozionali dal sito ufficiale, senza sostituire l'icona.
+- [x] Collegamento a sito ufficiale o scheda Microsoft Store quando disponibile.
+- [x] Nuova icona originale vettoriale, esportata in più dimensioni per Windows.
 
 ## Collaudi eseguiti
 

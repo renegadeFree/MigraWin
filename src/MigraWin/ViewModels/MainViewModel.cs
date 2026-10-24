@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using MigraWin.Infrastructure;
 using MigraWin.Models;
 using MigraWin.Services;
@@ -81,6 +82,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private readonly HistoryStore _historyStore = new();
     private readonly LocalSecretStore _localSecretStore = new();
     private readonly ScheduleService _scheduleService = new();
+    private readonly ApplicationArtworkService _artworkService = new();
     private readonly DialogService _dialogs = new();
     private RepositorySession? _repository;
     private CancellationTokenSource? _operationCancellation;
@@ -93,6 +95,8 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     private double _progressValue;
     private bool _isProgressIndeterminate;
     private InstalledApplication? _selectedApplication;
+    private string _selectedIconStatus = string.Empty;
+    private CancellationTokenSource? _artworkCancellation;
     private string _profileName = $"Backup del {DateTime.Now:dd/MM/yyyy}";
     private string _backupDestination = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -174,6 +178,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         AddCustomFolderCommand = new AsyncRelayCommand(AddCustomFolderAsync);
         AddExclusionCommand = new AsyncRelayCommand(AddExclusionAsync);
         ClearExclusionsCommand = new RelayCommand(ClearExclusions, () => SelectedApplication is not null);
+        OpenOfficialPageCommand = new RelayCommand(OpenOfficialPage, () => HasOfficialUrl);
         BrowseInstallerCommand = new RelayCommand(BrowseInstaller);
         CreateBackupCommand = new AsyncRelayCommand(CreateBackupAsync, () => !IsBusy);
         CancelCommand = new RelayCommand(CancelOperation, () => IsBusy);
@@ -214,6 +219,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     public ObservableCollection<RestoreApplicationItem> RestoreApplications { get; } = [];
     public ObservableCollection<PathMapping> RestoreMappings { get; } = [];
     public ObservableCollection<ActivityItem> Activities { get; } = [];
+    public ObservableCollection<ImageSource> SelectedProductImages { get; } = [];
     public ObservableCollection<PackageEntry> Packages { get; } = [];
     public ObservableCollection<BackupProfile> Profiles { get; } = [];
     public ObservableCollection<SnapshotChange> ComparisonChanges { get; } = [];
@@ -229,6 +235,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     public ICommand AddCustomFolderCommand { get; }
     public ICommand AddExclusionCommand { get; }
     public ICommand ClearExclusionsCommand { get; }
+    public ICommand OpenOfficialPageCommand { get; }
     public ICommand BrowseInstallerCommand { get; }
     public ICommand CreateBackupCommand { get; }
     public ICommand CancelCommand { get; }
@@ -362,13 +369,39 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         {
             if (SetProperty(ref _selectedApplication, value))
             {
+                _artworkCancellation?.Cancel();
+                _artworkCancellation?.Dispose();
+                _artworkCancellation = null;
+                SelectedProductImages.Clear();
+                SelectedIconStatus = value is null
+                    ? string.Empty
+                    : value.IconSource is null
+                        ? "Nessuna immagine locale disponibile."
+                        : "Icona dell'installazione.";
+                if (value is not null && HasHttpOfficialUrl(value.ProductUrl))
+                {
+                    _artworkCancellation = new CancellationTokenSource();
+                    _ = LoadSelectedArtworkAsync(value, _artworkCancellation.Token);
+                }
+
                 OnPropertyChanged(nameof(HasSelectedApplication));
+                OnPropertyChanged(nameof(HasOfficialUrl));
+                OnPropertyChanged(nameof(HasProductImages));
                 RaiseCommandStates();
             }
         }
     }
 
     public bool HasSelectedApplication => SelectedApplication is not null;
+    public bool HasOfficialUrl => SelectedApplication is not null
+                                   && Uri.TryCreate(SelectedApplication.ProductUrl, UriKind.Absolute, out var uri)
+                                   && uri.Scheme is "http" or "https" or "ms-windows-store";
+    public bool HasProductImages => SelectedProductImages.Count > 0;
+    public string SelectedIconStatus
+    {
+        get => _selectedIconStatus;
+        private set => SetProperty(ref _selectedIconStatus, value);
+    }
     public string InstalledCountLabel => Applications.Count.ToString("N0");
     public string SelectedCountLabel => Applications.Count(application => application.IsSelected).ToString("N0");
     public string ExcludedGamesLabel => Applications.Count(application => application.IsGame).ToString("N0");
@@ -700,7 +733,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         set => SetProperty(ref _isCompactNavigation, value);
     }
 
-    public string VersionLabel => "MigraWin 1.4.4 · Windows x64";
+    public string VersionLabel => $"MigraWin {UpdateService.CurrentVersion} · Windows x64";
     public string DataDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "MigraWin");
@@ -803,6 +836,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
             Source = "Portabile",
             SourceDetail = "Eseguibile aggiunto dall'utente",
             InstallLocation = directory,
+            DisplayIcon = executable,
             SupportLevel = SupportLevel.Archivable,
             BackupData = true,
             IsSelected = true
@@ -2135,7 +2169,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
                      PrepareRestoreCommand, RestoreCommand,
                      ImportPackageCommand, RemovePackageCommand,
                      SaveProfileCommand, LoadProfileCommand, ExportProfileCommand, RemoveScheduleCommand,
-                     ClearExclusionsCommand, CheckForUpdatesCommand, InstallUpdateCommand
+                     ClearExclusionsCommand, OpenOfficialPageCommand, CheckForUpdatesCommand, InstallUpdateCommand
                  })
         {
             switch (command)
@@ -2165,6 +2199,73 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
     {
         _operationCancellation?.Cancel();
         _operationCancellation?.Dispose();
+        _artworkCancellation?.Cancel();
+        _artworkCancellation?.Dispose();
         await CloseRepositoryAsync();
     }
+
+    private async Task LoadSelectedArtworkAsync(
+        InstalledApplication application,
+        CancellationToken cancellationToken)
+    {
+        if (application.IconSource is null)
+        {
+            SelectedIconStatus = "Nessuna icona locale disponibile.";
+        }
+
+        IReadOnlyList<ImageSource> productImages;
+        try
+        {
+            productImages = await _artworkService.LoadOfficialProductImagesAsync(application, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        catch
+        {
+            productImages = [];
+        }
+
+        if (cancellationToken.IsCancellationRequested
+            || !ReferenceEquals(SelectedApplication, application))
+        {
+            return;
+        }
+
+        foreach (var image in productImages)
+        {
+            SelectedProductImages.Add(image);
+        }
+
+        OnPropertyChanged(nameof(HasProductImages));
+        if (application.IconSource is not null)
+        {
+            SelectedIconStatus = "Icona dell'installazione.";
+        }
+    }
+
+    private void OpenOfficialPage()
+    {
+        var url = SelectedApplication?.ProductUrl;
+        if (string.IsNullOrWhiteSpace(url)
+            || !Uri.TryCreate(url, UriKind.Absolute, out var uri)
+            || uri.Scheme is not ("http" or "https" or "ms-windows-store"))
+        {
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception exception)
+        {
+            _dialogs.ShowError($"Impossibile aprire il sito ufficiale: {exception.Message}");
+        }
+    }
+
+    private static bool HasHttpOfficialUrl(string url) =>
+        Uri.TryCreate(url, UriKind.Absolute, out var uri)
+        && uri.Scheme is "http" or "https";
 }

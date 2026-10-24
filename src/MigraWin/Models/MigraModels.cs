@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 using MigraWin.Infrastructure;
+using MigraWin.Services;
 
 namespace MigraWin.Models;
 
@@ -56,6 +58,8 @@ public sealed class InstalledApplication : ObservableObject
     private bool _backupSensitiveSettings;
     private string _installerPath = string.Empty;
     private SupportLevel _supportLevel;
+    private ImageSource? _iconSource;
+    private bool _iconResolved;
 
     public required string InstallationId { get; init; }
     public required string ProductId { get; init; }
@@ -66,6 +70,9 @@ public sealed class InstalledApplication : ObservableObject
     public string Source { get; init; } = "Windows";
     public string SourceDetail { get; init; } = string.Empty;
     public string InstallLocation { get; init; } = string.Empty;
+    public string DisplayIcon { get; init; } = string.Empty;
+    public string ProductUrl { get; set; } = string.Empty;
+    public string PackageFamilyName { get; init; } = string.Empty;
     public string UninstallString { get; init; } = string.Empty;
     public string UserName { get; init; } = Environment.UserName;
     public bool IsGame { get; init; }
@@ -157,6 +164,36 @@ public sealed class InstalledApplication : ObservableObject
     public bool HasData => DataRoots.Count + CustomDataRoots.Count > 0;
     public bool HasInstalledFiles => !string.IsNullOrWhiteSpace(InstallLocation)
                                      && Directory.Exists(InstallLocation);
+    public ImageSource? IconSource
+    {
+        get
+        {
+            if (!_iconResolved)
+            {
+                _iconResolved = true;
+                _iconSource = ApplicationArtworkService.LoadLocalIcon(this);
+            }
+
+            return _iconSource;
+        }
+    }
+
+    public string IconInitials
+    {
+        get
+        {
+            var words = DisplayName.Split(
+                [' ', '-', '_', '.', '(', ')', '[', ']'],
+                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var letters = words
+                .Select(word => word.FirstOrDefault(char.IsLetterOrDigit))
+                .Where(letter => letter != '\0')
+                .Take(2)
+                .ToArray();
+            return letters.Length == 0 ? "?" : new string(letters).ToUpperInvariant();
+        }
+    }
+
     public string SupportLabel => SupportLevel switch
     {
         SupportLevel.Detected => "Rilevato",
@@ -168,6 +205,7 @@ public sealed class InstalledApplication : ObservableObject
     };
     public string SelectionLabel => IsGame ? "Gioco escluso" : IsSelected ? "Nel backup" : "Non selezionato";
     public string SizeLabel => EstimatedSize > 0 ? FormatBytes(EstimatedSize) : "Da calcolare";
+    public string VersionLabel => $"{Version} · {Architecture}";
 
     public static string FormatBytes(long bytes)
     {

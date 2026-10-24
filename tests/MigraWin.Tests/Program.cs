@@ -47,6 +47,68 @@ try
     application.CustomDataRoots.Add(source);
     application.ExcludedDataRoots.Add(Path.Combine(source, "Ignored"));
 
+    var notepadIconPath = ApplicationArtworkService.ParseDisplayIconPath(
+        $"\"{Path.Combine(Environment.SystemDirectory, "notepad.exe")}\",0");
+    Assert(notepadIconPath is not null, "Un DisplayIcon Windows valido deve essere riconosciuto.");
+    var localIcon = ApplicationArtworkService.LoadLocalIcon(new InstalledApplication
+    {
+        InstallationId = "icon-test",
+        ProductId = "icon-product",
+        DisplayName = "Blocco note",
+        DisplayIcon = notepadIconPath!
+    });
+    Assert(localIcon is not null, "L'icona locale dell'eseguibile deve essere estratta.");
+
+    var artworkPage = new Uri("https://example.test/app/");
+    var artworkCandidates = ApplicationArtworkService.ParseProductImageCandidates(
+        """
+        <html><head>
+          <link rel="icon" href="/favicon.ico">
+          <link rel="apple-touch-icon" href="/touch.png">
+          <meta content="/official.png" property="og:image">
+        </head></html>
+        """,
+        artworkPage);
+    Assert(artworkCandidates.Count == 1
+           && artworkCandidates[0].AbsolutePath == "/official.png",
+        "La galleria deve contenere immagini prodotto e non sostituire l'icona con una favicon.");
+
+    var artworkBytes = Convert.FromBase64String(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=");
+    var artworkClient = new HttpClient(new StubHttpHandler(request =>
+    {
+        if (request.RequestUri!.AbsolutePath.EndsWith(".png", StringComparison.Ordinal))
+        {
+            return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(artworkBytes)
+                {
+                    Headers = { ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png") }
+                }
+            };
+        }
+
+        return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+        {
+            Content = new StringContent(
+                """<meta property="og:image" content="https://example.test/icon.png">""",
+                Encoding.UTF8,
+                "text/html")
+        };
+    }));
+    var onlineArtwork = await new ApplicationArtworkService(
+            artworkClient,
+            Path.Combine(root, "artwork-cache"))
+        .LoadOfficialProductImagesAsync(new InstalledApplication
+        {
+            InstallationId = "online-icon-test",
+            ProductId = "online-icon-product",
+            DisplayName = "Applicazione online",
+            Version = "1.0",
+            ProductUrl = "https://example.test/app"
+        });
+    Assert(onlineArtwork.Count == 1, "L'immagine trovata sul sito ufficiale deve essere caricata nella galleria.");
+
     var backup = new BackupService();
     var (manifest, recoveryKey) = await backup.CreateBackupAsync(
         repositoryPath,

@@ -10,7 +10,7 @@
     <ApplicationIcon>Assets\MigraWin.ico</ApplicationIcon>
     <AssemblyName>MigraWin</AssemblyName>
     <RootNamespace>MigraWin</RootNamespace>
-    <Version>1.4.4</Version>
+    <Version>1.5.0</Version>
     <Authors>Paolo</Authors>
     <Product>MigraWin</Product>
     <Description>Backup e migrazione trasparente dell'ambiente applicativo Windows.</Description>
@@ -18,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\MigraWinMark.png" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.13" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.14" />
   </ItemGroup>

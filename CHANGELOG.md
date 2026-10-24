@@ -1,9 +1,12 @@
 # Changelog
 
-## Non ancora rilasciato
+## 1.5.0 — 24 ottobre 2026
 
-- README riorganizzato per spiegare obiettivi, flusso d'uso, limiti e privacy prima dei dettagli tecnici;
-- aggiunte schermate reali di panoramica, inventario, backup e aggiornamenti.
+- aggiunte le icone delle applicazioni nell'inventario, estratte da eseguibili, file ICO e manifest MSIX;
+- immagini promozionali separate dall'icona e mostrate in una galleria nella scheda dell'app;
+- collegamento alla pagina ufficiale o alla scheda Microsoft Store quando disponibile;
+- nuova identità visiva originale per applicazione, finestra, menu Start e installer;
+- versione dell'MSI ricavata automaticamente dal progetto.
 
 ## 1.4.4 — 24 ottobre 2026
 

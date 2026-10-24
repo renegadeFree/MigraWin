@@ -77,6 +77,11 @@ public static partial class AdapterCatalog
 
         app.SettingsRoots.AddRange(adapter.Settings.Select(spec => spec.Root));
         app.DataRoots.AddRange(adapter.Data.Select(spec => spec.Root));
+        if (string.IsNullOrWhiteSpace(app.ProductUrl))
+        {
+            app.ProductUrl = adapter.OfficialUrl;
+        }
+
         if (app.SupportLevel < SupportLevel.OnlineReinstall)
         {
             app.SupportLevel = SupportLevel.OnlineReinstall;

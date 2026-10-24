@@ -136,7 +136,8 @@
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="34" />
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="50" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="130" />
                                     <ColumnDefinition Width="Auto" />
@@ -144,7 +145,21 @@
                                 <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           IsEnabled="{Binding IsGame, Converter={StaticResource InverseBoolean}}"
                                           VerticalAlignment="Center" ToolTip="Includi nel backup" />
-                                <StackPanel Grid.Column="1">
+                                <Border Grid.Column="1" Width="40" Height="40"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Background="{DynamicResource AppSurfaceAltBrush}"
+                                        BorderBrush="{DynamicResource AppStrokeBrush}"
+                                        BorderThickness="1" CornerRadius="8" Padding="4">
+                                    <Grid>
+                                        <TextBlock Text="{Binding IconInitials}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   FontSize="13" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AppTextSecondaryBrush}" />
+                                        <Image Source="{Binding IconSource}" Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Grid>
+                                </Border>
+                                <StackPanel Grid.Column="2">
                                     <TextBlock Text="{Binding DisplayName}" Style="{StaticResource BodyStrongText}"
                                                TextTrimming="CharacterEllipsis" />
                                     <TextBlock Style="{StaticResource CaptionText}" Margin="0,3,0,0"
@@ -156,13 +171,13 @@
                                         <Run Text="{Binding Architecture}" />
                                     </TextBlock>
                                 </StackPanel>
-                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                <StackPanel Grid.Column="3" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding Source}" Style="{StaticResource CaptionText}"
                                                TextTrimming="CharacterEllipsis" />
                                     <TextBlock Text="{Binding SizeLabel}" Style="{StaticResource CaptionText}"
                                                Margin="0,2,0,0" />
                                 </StackPanel>
-                                <Border Grid.Column="3" Style="{StaticResource Pill}" VerticalAlignment="Center">
+                                <Border Grid.Column="4" Style="{StaticResource Pill}" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding SupportLabel}" FontSize="11" FontWeight="SemiBold" />
                                 </Border>
                             </Grid>
@@ -185,10 +200,82 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
                                   Visibility="{Binding HasSelectedApplication, Converter={StaticResource BoolToVisibility}}">
                         <StackPanel>
-                            <TextBlock Text="{Binding SelectedApplication.DisplayName}"
-                                       Style="{StaticResource SubtitleText}" TextWrapping="Wrap" />
-                            <TextBlock Text="{Binding SelectedApplication.Publisher}"
-                                       Style="{StaticResource MutedText}" Margin="0,3,0,14" />
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="76" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Width="68" Height="68" VerticalAlignment="Top"
+                                        Background="{DynamicResource AppSurfaceAltBrush}"
+                                        BorderBrush="{DynamicResource AppStrokeBrush}"
+                                        BorderThickness="1" CornerRadius="12" Padding="7">
+                                    <Grid>
+                                        <TextBlock Text="{Binding SelectedApplication.IconInitials}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   FontSize="22" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AppTextSecondaryBrush}" />
+                                        <Image Source="{Binding SelectedApplication.IconSource}" Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Grid>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                                    <TextBlock Text="{Binding SelectedApplication.DisplayName}"
+                                               Style="{StaticResource SubtitleText}" TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding SelectedApplication.Publisher}"
+                                               Style="{StaticResource MutedText}" Margin="0,2,0,0" />
+                                    <TextBlock Text="{Binding SelectedApplication.VersionLabel}"
+                                               Style="{StaticResource CaptionText}" Margin="0,4,0,0" />
+                                    <TextBlock Text="{Binding SelectedIconStatus}"
+                                               Style="{StaticResource CaptionText}" TextWrapping="Wrap"
+                                               Margin="0,5,0,0" />
+                                    <Button Content="Apri sito ufficiale" Style="{StaticResource GhostButton}"
+                                            Command="{Binding OpenOfficialPageCommand}"
+                                            AutomationProperties.Name="Apri il sito ufficiale dell'applicazione"
+                                            HorizontalAlignment="Left" MinHeight="28" Padding="8,2"
+                                            Margin="-8,4,0,0" />
+                                </StackPanel>
+                            </Grid>
+                            <Border Style="{StaticResource CardBorder}" Padding="12"
+                                    Margin="0,0,0,16"
+                                    Visibility="{Binding HasProductImages, Converter={StaticResource BoolToVisibility}}">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Dal sito ufficiale" Style="{StaticResource BodyStrongText}" />
+                                        <TextBlock Grid.Column="1" Text="ANTEPRIMA"
+                                                   HorizontalAlignment="Right"
+                                                   Style="{StaticResource CaptionText}"
+                                                   FontWeight="SemiBold" />
+                                    </Grid>
+                                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                                  VerticalScrollBarVisibility="Disabled">
+                                        <ItemsControl ItemsSource="{Binding SelectedProductImages}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Width="250" Height="140" Margin="0,0,10,0"
+                                                            Background="{DynamicResource AppSurfaceAltBrush}"
+                                                            BorderBrush="{DynamicResource AppStrokeBrush}"
+                                                            BorderThickness="1" CornerRadius="9">
+                                                        <Image Source="{Binding}" Stretch="UniformToFill"
+                                                               RenderOptions.BitmapScalingMode="HighQuality" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                    <TextBlock Text="Immagini promozionali fornite dalla pagina ufficiale."
+                                               Style="{StaticResource CaptionText}"
+                                               TextWrapping="Wrap" Margin="0,9,0,0" />
+                                </StackPanel>
+                            </Border>
                             <Border Style="{StaticResource SubtleCardBorder}" Margin="0,0,0,16">
                                 <StackPanel>
                                     <Grid>

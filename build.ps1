@@ -11,6 +11,11 @@ if (-not (Test-Path -LiteralPath $dotnet)) {
 
 $publishDirectory = Join-Path $root "artifacts\publish"
 $installerDirectory = Join-Path $root "artifacts\installer"
+[xml]$project = Get-Content -LiteralPath (Join-Path $root "src\MigraWin\MigraWin.csproj") -Raw
+$version = [string]$project.Project.PropertyGroup.Version
+if ([string]::IsNullOrWhiteSpace($version)) {
+    throw "Versione prodotto non trovata nel progetto."
+}
 New-Item -ItemType Directory -Force -Path $publishDirectory, $installerDirectory | Out-Null
 
 $signingPfx = $env:MIGRAWIN_SIGN_PFX
@@ -54,10 +59,11 @@ try {
         throw "Installazione dell'estensione WiX non riuscita."
     }
 
-    $msi = Join-Path $installerDirectory "MigraWin-1.4.4-x64.msi"
+    $msi = Join-Path $installerDirectory "MigraWin-$version-x64.msi"
     & $dotnet tool run wix build "installer\MigraWin.wxs" `
         -ext WixToolset.UI.wixext `
         -arch x64 `
+        -d "ProductVersion=$version" `
         -o $msi | Out-Host
     if ($LASTEXITCODE -ne 0) {
         throw "Creazione dell'installer non riuscita."

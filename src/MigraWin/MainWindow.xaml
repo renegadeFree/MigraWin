@@ -31,12 +31,8 @@
                         <ColumnDefinition Width="42" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Border Width="36" Height="36" CornerRadius="9"
-                            Background="{DynamicResource AppAccentBrush}">
-                        <TextBlock Text="MW" Foreground="{DynamicResource AppAccentTextBrush}"
-                                   FontWeight="SemiBold" FontSize="12"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Image Source="/Assets/MigraWinMark.png" Width="40" Height="40"
+                           Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0"
                                 Visibility="{Binding IsCompactNavigation, Converter={StaticResource InverseBoolToVisibility}}">
                         <TextBlock Text="MigraWin" FontSize="17" FontWeight="SemiBold"

@@ -84,6 +84,10 @@ public sealed class InventoryService
 
                 var publisher = key.GetValue("Publisher") as string ?? "Origine sconosciuta";
                 var installLocation = key.GetValue("InstallLocation") as string ?? string.Empty;
+                var productUrl = FirstWebUrl(
+                    key.GetValue("URLInfoAbout") as string,
+                    key.GetValue("HelpLink") as string,
+                    key.GetValue("URLUpdateInfo") as string);
                 var identity = $"{hive}\\{view}\\{subKeyName}";
                 var estimatedSizeKb = Convert.ToInt64(key.GetValue("EstimatedSize", 0L));
                 var game = IsLikelyGame(displayName, publisher, installLocation);
@@ -99,6 +103,8 @@ public sealed class InventoryService
                     Source = "Registro Windows",
                     SourceDetail = label,
                     InstallLocation = Environment.ExpandEnvironmentVariables(installLocation),
+                    DisplayIcon = key.GetValue("DisplayIcon") as string ?? string.Empty,
+                    ProductUrl = productUrl,
                     UninstallString = key.GetValue("UninstallString") as string ?? string.Empty,
                     EstimatedSize = Math.Max(0, estimatedSizeKb) * 1024,
                     IsGame = game,
@@ -127,6 +133,7 @@ public sealed class InventoryService
                   default { $_.Architecture.ToString() }
                 }
                 InstallLocation = $_.InstallLocation
+                PackageFamilyName = $_.PackageFamilyName
                 IsFramework = $_.IsFramework
               }
             } | ConvertTo-Json -Compress
@@ -173,6 +180,7 @@ public sealed class InventoryService
             var name = element.GetProperty("Name").GetString() ?? "Pacchetto Store";
             var publisher = element.TryGetProperty("PublisherId", out var published) ? published.GetString() ?? "Store" : "Store";
             var location = element.TryGetProperty("InstallLocation", out var install) ? install.GetString() ?? string.Empty : string.Empty;
+            var familyName = element.TryGetProperty("PackageFamilyName", out var family) ? family.GetString() ?? string.Empty : string.Empty;
             var displayName = FriendlyPackageName(name);
             results.Add(new InstalledApplication
             {
@@ -185,6 +193,10 @@ public sealed class InventoryService
                 Source = "Microsoft Store",
                 SourceDetail = "Pacchetto MSIX installato per utente",
                 InstallLocation = location,
+                PackageFamilyName = familyName,
+                ProductUrl = string.IsNullOrWhiteSpace(familyName)
+                    ? string.Empty
+                    : $"ms-windows-store://pdp/?PFN={Uri.EscapeDataString(familyName)}",
                 IsGame = IsLikelyGame(displayName, publisher, location),
                 SupportLevel = SupportLevel.OnlineReinstall
             });
@@ -214,6 +226,11 @@ public sealed class InventoryService
         };
         return known.TryGetValue(value, out var friendly) ? friendly : value.Replace('.', ' ');
     }
+
+    private static string FirstWebUrl(params string?[] candidates) =>
+        candidates.FirstOrDefault(candidate =>
+            Uri.TryCreate(candidate, UriKind.Absolute, out var uri)
+            && uri.Scheme is "http" or "https") ?? string.Empty;
 
     private static string Hash(string value) =>
         Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value))).ToLowerInvariant();

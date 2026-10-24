@@ -1,10 +1,12 @@
 # MigraWin
 
+<p><img src="docs/images/migrawin-icon.png" width="96" alt="Icona di MigraWin"></p>
+
 **Backup e migrazione delle applicazioni Windows, con controllo, crittografia e ripristino selettivo.**
 
 [![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
 
-[Scarica MigraWin 1.4.4](https://github.com/renegadeFree/MigraWin/releases/download/v1.4.4/MigraWin-1.4.4-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
+[Scarica MigraWin 1.5.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.5.0/MigraWin-1.5.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
 
 [![Panoramica di MigraWin](docs/images/panoramica.png)](docs/images/panoramica.png)
 
@@ -46,7 +48,7 @@ flowchart LR
 
 ### Inventario e scelta delle componenti
 
-Cerca per nome, produttore o versione, poi decidi se includere impostazioni, dati, installer, file installati e configurazioni sensibili.
+Cerca per nome, produttore o versione e riconosci ogni applicazione dalla sua icona. Nella scheda puoi vedere la versione installata, aprire la pagina ufficiale e consultare le immagini promozionali senza alterare l'icona del programma.
 
 [![Inventario applicazioni in MigraWin](docs/images/inventario.png)](docs/images/inventario.png)
 
@@ -67,6 +69,7 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 | Area | Cosa offre |
 | --- | --- |
 | Inventario | Registro Windows a 32/64 bit, Store/MSIX, ricerca, filtri, selezione multipla e applicazioni portabili |
+| Schede applicazione | Icona locale, versione, collegamento ufficiale e galleria di immagini prodotto |
 | Selezione | Componenti per applicazione, cartelle dati aggiuntive, esclusioni persistenti e profili importabili/esportabili |
 | Backup | Copia completa, incrementale o differenziale con deduplicazione |
 | Protezione | Oggetti AES-256-GCM, manifest autenticati, password PBKDF2 e chiave di recupero indipendente |
@@ -80,20 +83,20 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 
 Requisiti: **Windows 11 x64**.
 
-1. Scarica [MigraWin 1.4.4 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.4.4/MigraWin-1.4.4-x64.msi).
+1. Scarica [MigraWin 1.5.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.5.0/MigraWin-1.5.0-x64.msi).
 2. Apri l'MSI. L'installazione avviene per l'utente corrente e non richiede privilegi amministrativi.
 3. Avvia MigraWin dal menu Start.
 
 Puoi verificare il download:
 
 ```powershell
-Get-FileHash .\MigraWin-1.4.4-x64.msi -Algorithm SHA256
+Get-FileHash .\MigraWin-1.5.0-x64.msi -Algorithm SHA256
 ```
 
-Hash SHA-256 della release 1.4.4:
+Hash SHA-256 della release 1.5.0:
 
 ```text
-227B83EF4075E0EBD511AB83F5977B0C9FBD26FFEC9DF939535BBD1CFE534188
+3A6B6A8BC00D2220BD421B2242848C3A131D942D93722CC0E051C6C3B0BAE8A1
 ```
 
 > **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.
@@ -104,6 +107,7 @@ Hash SHA-256 della release 1.4.4:
 - La password non viene salvata nei profili; dal secondo accesso serve la password oppure la chiave di recupero.
 - Le configurazioni che possono contenere token o password sono escluse per impostazione predefinita.
 - Le credenziali delle applicazioni non vengono estratte automaticamente.
+- Le immagini promozionali vengono richieste solo quando si apre la scheda di un'app con sito ufficiale disponibile.
 - Gli archivi importati sono controllati contro percorsi malevoli, traversal e collegamenti simbolici.
 - Gli aggiornamenti vengono accettati solo dopo verifica del checksum pubblicato.
 
@@ -121,7 +125,7 @@ Essere riconosciuta non significa che ogni dato possa essere trasferito automati
 - I giochi non vengono inclusi automaticamente.
 - Sono fuori perimetro WSL, container Docker e macchine virtuali.
 - Windows 10 e Windows ARM64 non sono dichiarati supportati.
-- La release 1.4.4 non è firmata con un certificato Authenticode.
+- La release 1.5.0 non è firmata con un certificato Authenticode.
 
 ## Sviluppo e collaudo
 
@@ -131,7 +135,7 @@ Requisiti: Windows 11 x64, .NET 10 SDK e PowerShell.
 .\build.ps1
 ```
 
-Il comando compila l'app, esegue il collaudo, genera l'MSI e, se è disponibile un certificato configurato, firma exe e installer.
+Il comando pubblica l'app, genera l'MSI e, se è disponibile un certificato configurato, firma exe e installer.
 
 Per eseguire solo i test:
 
