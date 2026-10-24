@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.0 — 24 ottobre 2026
+
+- icona fornita dall'utente modernizzata con simbolo bianco su gradiente blu-verde e nodi luminosi;
+- backup n8n esteso al package npm completo, database, workflow, storage e nodi personalizzati;
+- configurazione n8n protetta e dump PM2 inclusi come componenti sensibili;
+- rilevamento esplicito della presenza o assenza del processo n8n nel dump PM2.
+
 ## 1.6.1 — 24 ottobre 2026
 
 - nuova icona fornita dall'utente, convertita in un ICO multi-risoluzione senza modificarne il simbolo;

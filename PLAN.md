@@ -52,6 +52,10 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Inclusione selettiva di configurazioni e database locali, mantenendo l'esclusione predefinita dei segreti.
 - [x] Icona fornita dall'utente integrata come sorgente immutata e convertita in ICO multi-risoluzione.
 - [x] Collegamento Desktop creato dall'MSI per l'utente corrente e rimosso alla disinstallazione.
+- [x] Icona fornita dall'utente modernizzata mantenendo il simbolo originale, con nodi luminosi e fondo blu-verde.
+- [x] n8n include package npm completo, database, workflow, storage e moduli dei nodi personalizzati.
+- [x] Dump PM2 e configurazione n8n sono classificati come componenti sensibili con attivazione esplicita.
+- [x] La scheda n8n verifica la presenza del processo nel dump PM2 senza assumerne l'esistenza.
 
 ## Collaudi eseguiti
 

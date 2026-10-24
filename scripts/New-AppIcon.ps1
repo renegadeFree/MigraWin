@@ -27,6 +27,7 @@ $source = [System.Drawing.Bitmap]::new(
     [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $sourceGraphics = [System.Drawing.Graphics]::FromImage($source)
 $sourceGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+$sourceGraphics.CompositingQuality = [System.Drawing.Drawing2D.CompositingQuality]::HighQuality
 $sourceGraphics.Clear([System.Drawing.Color]::Transparent)
 $tile = [System.Drawing.Drawing2D.GraphicsPath]::new()
 $padding = [int]($supplied.Width * 0.025)
@@ -37,10 +38,55 @@ $tile.AddArc($supplied.Width - $padding - $diameter, $padding, $diameter, $diame
 $tile.AddArc($supplied.Width - $padding - $diameter, $supplied.Height - $padding - $diameter, $diameter, $diameter, 0, 90)
 $tile.AddArc($padding, $supplied.Height - $padding - $diameter, $diameter, $diameter, 90, 90)
 $tile.CloseFigure()
-$sourceGraphics.FillPath([System.Drawing.Brushes]::White, $tile)
-$sourceGraphics.DrawImage($supplied, 0, 0, $supplied.Width, $supplied.Height)
+$background = [System.Drawing.Drawing2D.LinearGradientBrush]::new(
+    [System.Drawing.PointF]::new(32, 24),
+    [System.Drawing.PointF]::new(492, 496),
+    [System.Drawing.Color]::FromArgb(255, 5, 18, 36),
+    [System.Drawing.Color]::FromArgb(255, 8, 99, 118))
+$sourceGraphics.FillPath($background, $tile)
+
+$glow = [System.Drawing.Drawing2D.GraphicsPath]::new()
+$glow.AddEllipse(184, -82, 430, 430)
+$glowBrush = [System.Drawing.Drawing2D.PathGradientBrush]::new($glow)
+$glowBrush.CenterColor = [System.Drawing.Color]::FromArgb(145, 22, 119, 255)
+$glowBrush.SurroundColors = @([System.Drawing.Color]::FromArgb(0, 22, 119, 255))
+$sourceGraphics.FillPath($glowBrush, $glow)
+
+$glyph = [System.Drawing.Bitmap]::new(
+    $supplied.Width,
+    $supplied.Height,
+    [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+for ($y = 0; $y -lt $supplied.Height; $y++) {
+    for ($x = 0; $x -lt $supplied.Width; $x++) {
+        $alpha = $supplied.GetPixel($x, $y).A
+        if ($alpha -gt 0) {
+            $glyph.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($alpha, 239, 253, 255))
+        }
+    }
+}
+
+foreach ($point in @(@(114, 156), @(402, 156), @(254, 388))) {
+    $nodeGlow = [System.Drawing.Drawing2D.GraphicsPath]::new()
+    $nodeGlow.AddEllipse($point[0] - 28, $point[1] - 28, 56, 56)
+    $nodeBrush = [System.Drawing.Drawing2D.PathGradientBrush]::new($nodeGlow)
+    $nodeBrush.CenterColor = [System.Drawing.Color]::FromArgb(135, 68, 225, 255)
+    $nodeBrush.SurroundColors = @([System.Drawing.Color]::FromArgb(0, 68, 225, 255))
+    $sourceGraphics.FillPath($nodeBrush, $nodeGlow)
+    $nodeGlow.Dispose()
+    $nodeBrush.Dispose()
+}
+
+$sourceGraphics.DrawImage($glyph, 56, 48, 400, 400)
+$border = [System.Drawing.Pen]::new([System.Drawing.Color]::FromArgb(115, 126, 238, 255), 3)
+$sourceGraphics.DrawPath($border, $tile)
 $sourceGraphics.Dispose()
+$glyph.Dispose()
 $supplied.Dispose()
+$tile.Dispose()
+$background.Dispose()
+$glow.Dispose()
+$glowBrush.Dispose()
+$border.Dispose()
 $source.Save(
     (Join-Path $assetDirectory "MigraWinMark.png"),
     [System.Drawing.Imaging.ImageFormat]::Png)

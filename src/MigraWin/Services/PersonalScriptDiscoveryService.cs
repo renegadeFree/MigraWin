@@ -65,7 +65,9 @@ public sealed class PersonalScriptDiscoveryService
             "Automazione workflow",
             "https://n8n.io/",
             Path.Combine(_appData, "npm", "node_modules", "n8n"),
-            "Arresta n8n prima del backup per copiare il database in modo coerente.");
+            $"{(IsN8nManagedByPm2() ? "Avvio PM2 rilevato" : "Avvio PM2 non rilevato")}. " +
+            "Arresta n8n prima del backup per copiare il database in modo coerente.",
+            copyInstalledFiles: true);
         AddNpmTool(
             applications,
             claimed,
@@ -113,7 +115,8 @@ public sealed class PersonalScriptDiscoveryService
         string description,
         string productUrl,
         string packageDirectory,
-        string? note = null)
+        string? note = null,
+        bool copyInstalledFiles = false)
     {
         var wrapper = Path.Combine(_appData, "npm", id == "pi-agent" ? "pi.cmd" : id + ".cmd");
         if (!Directory.Exists(packageDirectory) && !File.Exists(wrapper))
@@ -128,7 +131,9 @@ public sealed class PersonalScriptDiscoveryService
             productUrl,
             Directory.Exists(packageDirectory) ? packageDirectory : string.Empty,
             description + " con configurazione locale." + (note is null ? string.Empty : " " + note),
-            ReadPackageVersion(packageDirectory)));
+            ReadPackageVersion(packageDirectory),
+            estimatedSize: DirectorySize(packageDirectory),
+            backupInstalledFiles: copyInstalledFiles));
         ClaimFiles(
             claimed,
             Path.Combine(_userProfile, "n8n-config.js"),
@@ -200,7 +205,8 @@ public sealed class PersonalScriptDiscoveryService
         string sourceDetail,
         string version = "Locale",
         string architecture = "Script",
-        long estimatedSize = 0)
+        long estimatedSize = 0,
+        bool backupInstalledFiles = false)
     {
         return new InstalledApplication
         {
@@ -217,8 +223,46 @@ public sealed class PersonalScriptDiscoveryService
             SupportLevel = SupportLevel.Archivable,
             BackupData = true,
             BackupSettings = false,
+            BackupInstalledFiles = backupInstalledFiles,
             EstimatedSize = estimatedSize
         };
+    }
+
+    private bool IsN8nManagedByPm2()
+    {
+        var dump = Path.Combine(_userProfile, ".pm2", "dump.pm2");
+        try
+        {
+            return File.Exists(dump)
+                   && System.Text.RegularExpressions.Regex.IsMatch(
+                       File.ReadAllText(dump),
+                       @"""name""\s*:\s*""n8n""",
+                       System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                       | System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static long DirectorySize(string directory)
+    {
+        if (!Directory.Exists(directory))
+        {
+            return 0;
+        }
+
+        try
+        {
+            return new DirectoryInfo(directory)
+                .EnumerateFiles("*", SearchOption.AllDirectories)
+                .Sum(file => file.Length);
+        }
+        catch
+        {
+            return 0;
+        }
     }
 
     private static string ReadPackageVersion(string packageDirectory)

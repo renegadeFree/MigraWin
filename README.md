@@ -6,7 +6,7 @@
 
 [![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
 
-[Scarica MigraWin 1.6.1](https://github.com/renegadeFree/MigraWin/releases/download/v1.6.1/MigraWin-1.6.1-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
+[Scarica MigraWin 1.7.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.7.0/MigraWin-1.7.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
 
 [![Panoramica di MigraWin](docs/images/panoramica.png)](docs/images/panoramica.png)
 
@@ -86,20 +86,20 @@ Da **Impostazioni → Aggiornamenti** il programma controlla l'ultima release pu
 
 Requisiti: **Windows 11 x64**.
 
-1. Scarica [MigraWin 1.6.1 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.6.1/MigraWin-1.6.1-x64.msi).
+1. Scarica [MigraWin 1.7.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.7.0/MigraWin-1.7.0-x64.msi).
 2. Apri l'MSI. L'installazione avviene per l'utente corrente e non richiede privilegi amministrativi; crea i collegamenti nel menu Start e sul Desktop.
 3. Avvia MigraWin dal menu Start.
 
 Puoi verificare il download:
 
 ```powershell
-Get-FileHash .\MigraWin-1.6.1-x64.msi -Algorithm SHA256
+Get-FileHash .\MigraWin-1.7.0-x64.msi -Algorithm SHA256
 ```
 
-Hash SHA-256 della release 1.6.1:
+Hash SHA-256 della release 1.7.0:
 
 ```text
-3731FAAB494EF0039A21D33C037E996B8AAEBCADF986CD48F0474D7A3FA0DB8F
+Il valore aggiornato è pubblicato anche in SHA256SUMS.txt nella release.
 ```
 
 > **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.
@@ -123,6 +123,10 @@ Essere riconosciuta non significa che ogni dato possa essere trasferito automati
 
 Per gli script personali vengono riconosciuti in modo specifico Enter for rename, PM2, n8n, Pi Agent e il proxy DeepSeek per Codex. Gli altri script eseguibili nella radice della cartella utente vengono elencati singolarmente; cartelle di progetto profonde possono essere aggiunte manualmente.
 
+### Migrazione n8n
+
+La voce **n8n** include l'installazione npm attiva, i wrapper CLI, database e file WAL, workflow e storage, manifest dei nodi e i moduli dei nodi personalizzati. La configurazione n8n e il dump PM2 sono disponibili tra i file sensibili, da autorizzare esplicitamente. MigraWin mostra se il dump PM2 contiene davvero un processo n8n; non presume che l'avvio sia già configurato. Dopo il ripristino, se il processo è presente nel dump, va verificato e avviato con `pm2 resurrect`.
+
 ## Limiti e perimetro
 
 - Non crea immagini del disco e non clona Windows.
@@ -132,7 +136,7 @@ Per gli script personali vengono riconosciuti in modo specifico Enter for rename
 - Sono fuori perimetro WSL, container Docker e macchine virtuali.
 - Windows 10 e Windows ARM64 non sono dichiarati supportati.
 - La scansione automatica degli script copre la radice del profilo e gli strumenti noti, non ogni progetto annidato nel disco.
-- La release 1.6.1 non è firmata con un certificato Authenticode.
+- La release 1.7.0 non è firmata con un certificato Authenticode.
 
 ## Sviluppo e collaudo
 

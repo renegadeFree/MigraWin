@@ -30,6 +30,19 @@ Quando MigraWin dispone di una pagina ufficiale o di una scheda Microsoft Store,
 
 Per n8n arresta il servizio prima del backup, così il database e i file WAL vengono copiati in uno stato coerente. PM2, n8n e Pi Agent includono i file di configurazione necessari; credenziali e configurazioni sensibili restano soggette alla selezione esplicita descritta sotto.
 
+### n8n, nodi e PM2
+
+Con n8n selezionato, il backup comprende:
+
+- il package npm installato e i comandi `n8n`;
+- `database.sqlite` e relativi file WAL/SHM, con workflow e credenziali cifrate;
+- `storage` e i file dei workflow;
+- manifest e moduli in `.n8n\nodes\node_modules`, inclusi i nodi personalizzati;
+- le impostazioni in `.n8n\config`, disponibili tra i componenti sensibili;
+- il package PM2 e il dump `.pm2\dump.pm2`, disponibile tra i componenti sensibili.
+
+La scheda n8n indica se nel dump PM2 è presente un processo chiamato `n8n`. Se il processo non è presente, il backup conserva comunque n8n e la sua configurazione, ma non può ricreare un avvio PM2 che non esisteva nel PC di origine. Se era presente, dopo il ripristino verifica il dump e avvia i processi con `pm2 resurrect`. MigraWin non avvia automaticamente processi personali.
+
 La copia dei file installati non equivale a un installer. Quando un'applicazione contiene possibili credenziali, il componente viene indicato come sensibile.
 
 I file di configurazione che contengono valori associati a password, token, chiavi API o chiavi private vengono esclusi per impostazione iniziale. Puoi autorizzarne l'acquisizione con **Includi configurazioni che possono contenere segreti**; il file resta cifrato e nel ripristino il componente sensibile non è preselezionato.

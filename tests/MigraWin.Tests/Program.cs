@@ -126,7 +126,13 @@ try
     await File.WriteAllTextAsync(Path.Combine(scriptHome, "n8n-config.js"), "module.exports = {};");
     await File.WriteAllTextAsync(Path.Combine(scriptHome, "startmenu_backup_pm2.js"), "console.log('test');");
     await File.WriteAllTextAsync(Path.Combine(scriptHome, ".n8n", "config"), "{}");
-    await File.WriteAllTextAsync(Path.Combine(scriptHome, ".pm2", "dump.pm2"), "[]");
+    await File.WriteAllTextAsync(
+        Path.Combine(scriptHome, ".pm2", "dump.pm2"),
+        """[{"name":"n8n","pm_exec_path":"C:\\Users\\test\\n8n.cmd"}]""");
+    Directory.CreateDirectory(Path.Combine(scriptHome, ".n8n", "nodes", "node_modules", "custom-node"));
+    await File.WriteAllTextAsync(
+        Path.Combine(scriptHome, ".n8n", "nodes", "node_modules", "custom-node", "index.js"),
+        "module.exports = {};");
     await File.WriteAllTextAsync(Path.Combine(scriptHome, ".pi", "agent", "settings.json"), "{}");
     await File.WriteAllTextAsync(Path.Combine(scriptHome, ".codex", "proxy", "codex-proxy.py"), "print('test')");
     await File.WriteAllTextAsync(
@@ -158,9 +164,18 @@ try
     Assert(new[] { "Enter for rename", "PM2", "n8n", "Pi Agent", "Proxy DeepSeek per Codex", "Custom tool" }
             .All(name => personalTools.Any(tool => tool.DisplayName == name)),
         "La scansione deve riconoscere gli strumenti personali noti e gli script nella home.");
-    Assert(personalTools.Single(tool => tool.DisplayName == "n8n").HasData
+    var n8nTool = personalTools.Single(tool => tool.DisplayName == "n8n");
+    var n8nSources = AdapterCatalog.GetSources(n8nTool);
+    Assert(n8nTool.HasData
+           && n8nTool.BackupInstalledFiles
+           && n8nSources.Any(source => source.Includes?.Contains("nodes/node_modules/**") == true)
+           && n8nSources.Any(source => source.Root.EndsWith(@"\.n8n\config", StringComparison.OrdinalIgnoreCase)
+                                       && source.Sensitive)
+           && n8nSources.Any(source => source.Root.EndsWith(@"\.pm2\dump.pm2", StringComparison.OrdinalIgnoreCase)
+                                       && source.Sensitive)
+           && n8nTool.SourceDetail.Contains("Avvio PM2 rilevato", StringComparison.Ordinal)
            && personalTools.Single(tool => tool.DisplayName == "Custom tool").CustomDataRoots.Count == 1,
-        "Gli strumenti personali devono esporre configurazioni e script al backup.");
+        "n8n deve includere package, nodi personalizzati, workflow e stato PM2 nel piano di backup.");
     Assert(personalTools.All(tool => tool.Source == "Script personale"),
         "Gli strumenti personali devono essere distinti dalle applicazioni installate.");
 
