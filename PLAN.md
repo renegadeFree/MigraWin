@@ -70,21 +70,23 @@ Ulteriori verifiche effettuate:
 - `dotnet list package --vulnerable --include-transitive`: nessun pacchetto vulnerabile;
 - build Debug e Release senza errori;
 - MSI installato con codice 0;
-- avvio del binario self-contained installato dalla release 1.6.1, finestra responsiva.
+- avvio del binario self-contained installato dalla release 1.7.0, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
 - icone applicazione estratte dal PC e galleria promozionale ufficiale verificate visivamente in Visual Studio Code;
-- icona fornita dall'utente verificata nell'API, nell'eseguibile e nella finestra installata;
+- icona fornita e modernizzata verificata nell'API, nell'eseguibile e nella finestra installata;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.6.1`;
-- GitHub Action della release `v1.6.1` completata con esito `success`;
-- Windows CI sul commit `862a884` completata con esito `success`: build, test, installazione MSI, self-check, menu Start, collegamento Desktop e disinstallazione;
-- MSI pubblico v1.6.1 scaricato e verificato: 59.756.544 byte, SHA-256 `3731FAAB494EF0039A21D33C037E996B8AAEBCADF986CD48F0474D7A3FA0DB8F`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.7.0`;
+- GitHub Action della release `v1.7.0` completata con esito `success`;
+- Windows CI sul commit `57ba6a1` completata con esito `success`: build, test, installazione MSI, self-check, menu Start, collegamento Desktop e disinstallazione;
+- MSI pubblico v1.7.0 scaricato e verificato: 60.018.688 byte, SHA-256 `B6993F5289DCE68119DFFBF4D348942FC92EED7FFC0D5ECCB6212195B7F47071`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
-- release pubblica `v1.6.1` installata con codice 0 e avviata correttamente;
+- release pubblica `v1.7.0` installata con codice 0 e avviata correttamente;
 - collegamento Desktop verificato prima dell'installazione, dopo l'installazione e dopo la disinstallazione;
 - scansione reale con applicazioni e strumenti, inclusi script personali e configurazioni locali;
-- strumenti verificati nell'inventario: Enter for rename, PM2, n8n, Pi Agent e Proxy DeepSeek per Codex.
+- strumenti verificati nell'inventario: Enter for rename, PM2, n8n, Pi Agent e Proxy DeepSeek per Codex;
+- n8n verificato con package da circa 1 GB, database/WAL, storage, nodi personalizzati, wrapper CLI e dump PM2 nel piano di backup;
+- assenza del processo n8n nel dump PM2 corrente rilevata e mostrata esplicitamente nell'interfaccia.
 - backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
 ## Prossimi incrementi
