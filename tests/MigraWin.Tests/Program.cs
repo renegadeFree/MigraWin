@@ -118,6 +118,7 @@ try
     Directory.CreateDirectory(Path.Combine(scriptHome, ".pi", "agent"));
     Directory.CreateDirectory(Path.Combine(scriptHome, ".codex", "proxy"));
     Directory.CreateDirectory(Path.Combine(scriptProgramFiles, "Nilesoft Shell", "imports", "scripts"));
+    Directory.CreateDirectory(Path.Combine(scriptProgramFiles, "Release"));
     Directory.CreateDirectory(Path.Combine(scriptAppData, "npm", "node_modules", "pm2"));
     Directory.CreateDirectory(Path.Combine(scriptAppData, "npm", "node_modules", "n8n"));
     Directory.CreateDirectory(Path.Combine(
@@ -138,6 +139,10 @@ try
     await File.WriteAllTextAsync(
         Path.Combine(scriptProgramFiles, "Nilesoft Shell", "imports", "scripts", "NewFolderWithSelection.ps1"),
         "param()");
+    await File.WriteAllTextAsync(
+        Path.Combine(scriptProgramFiles, "Release", "ExplorerBlurMica.dll"),
+        "fixture");
+    await File.WriteAllTextAsync(Path.Combine(scriptProgramFiles, "Release", "config.ini"), "[config]");
     foreach (var (package, version) in new[] { ("pm2", "6.0.0"), ("n8n", "2.0.0") })
     {
         await File.WriteAllTextAsync(
@@ -161,7 +166,16 @@ try
         AdapterCatalog.Apply(tool);
     }
 
-    Assert(new[] { "Enter for rename", "PM2", "n8n", "Pi Agent", "Proxy DeepSeek per Codex", "Custom tool" }
+    Assert(new[]
+            {
+                "Enter for rename · Nilesoft Shell",
+                "ExplorerBlurMica",
+                "PM2",
+                "n8n",
+                "Pi Agent",
+                "Proxy DeepSeek per Codex",
+                "Custom tool"
+            }
             .All(name => personalTools.Any(tool => tool.DisplayName == name)),
         "La scansione deve riconoscere gli strumenti personali noti e gli script nella home.");
     var n8nTool = personalTools.Single(tool => tool.DisplayName == "n8n");
@@ -179,6 +193,18 @@ try
         "n8n deve includere package, nodi personalizzati, workflow e stato PM2 nel piano di backup.");
     Assert(personalTools.All(tool => tool.Source == "Script personale"),
         "Gli strumenti personali devono essere distinti dalle applicazioni installate.");
+    Assert(personalTools.Single(tool => tool.DisplayName == "Enter for rename · Nilesoft Shell").HasSettings
+           && personalTools.Single(tool => tool.DisplayName == "ExplorerBlurMica").HasData,
+        "Nilesoft Shell e ExplorerBlurMica devono esporre configurazioni e file al backup.");
+    Assert(AdapterCatalog.GetSources(personalTools.Single(tool =>
+                tool.DisplayName == "Enter for rename · Nilesoft Shell"))
+            .Any(source => source.Includes?.Contains("imports/**") == true),
+        "Nilesoft Shell deve includere tutti i file della cartella imports.");
+    Assert(AdapterCatalog.GetSources(personalTools.Single(tool =>
+                tool.DisplayName == "ExplorerBlurMica"))
+            .Any(source => source.Root.EndsWith(@"\ExplorerBlurMica.dll",
+                StringComparison.OrdinalIgnoreCase)),
+        "ExplorerBlurMica.dll deve essere incluso tra i file personali.");
 
     var backup = new BackupService();
     var (manifest, recoveryKey) = await backup.CreateBackupAsync(

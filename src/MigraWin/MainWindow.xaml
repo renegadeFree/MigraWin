@@ -152,11 +152,21 @@
                          IsIndeterminate="{Binding IsProgressIndeterminate}"
                          Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
 
-            <ScrollViewer Grid.Row="2"
-                          HorizontalScrollBarVisibility="Auto"
+            <ScrollViewer x:Name="PageScrollViewer"
+                          Grid.Row="2"
                           VerticalScrollBarVisibility="Disabled"
                           HorizontalContentAlignment="Stretch"
                           Background="{DynamicResource AppWindowBrush}">
+                <ScrollViewer.Style>
+                    <Style TargetType="ScrollViewer">
+                        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsInventoryPage}" Value="True">
+                                <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ScrollViewer.Style>
                 <Grid MinWidth="840">
                     <views:OverviewView Visibility="{Binding IsOverviewPage, Converter={StaticResource BoolToVisibility}}" />
                     <views:InventoryView Visibility="{Binding IsInventoryPage, Converter={StaticResource BoolToVisibility}}" />

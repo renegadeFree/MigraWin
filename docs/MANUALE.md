@@ -30,6 +30,10 @@ Quando MigraWin dispone di una pagina ufficiale o di una scheda Microsoft Store,
 
 Per n8n arresta il servizio prima del backup, così il database e i file WAL vengono copiati in uno stato coerente. PM2, n8n e Pi Agent includono i file di configurazione necessari; credenziali e configurazioni sensibili restano soggette alla selezione esplicita descritta sotto.
 
+Nel pannello Inventario puoi trascinare il separatore verticale tra elenco e dettagli, oppure selezionarlo da tastiera e usare i tasti freccia. La larghezza viene mantenuta tra 280 e 620 pixel.
+
+**Nilesoft Shell** comprende `shell.nss`, i relativi backup, tutti i file `.nss` in `imports` e gli script in `imports\scripts`. **ExplorerBlurMica** comprende `ExplorerBlurMica.dll`, `config.ini`, `register.cmd` e `uninstall.cmd` dalla cartella `C:\Program Files\Release`.
+
 ### n8n, nodi e PM2
 
 Con n8n selezionato, il backup comprende:

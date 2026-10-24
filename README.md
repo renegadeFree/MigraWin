@@ -6,7 +6,7 @@
 
 [![Windows CI](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml/badge.svg)](https://github.com/renegadeFree/MigraWin/actions/workflows/ci.yml)
 
-[Scarica MigraWin 1.9.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.9.0/MigraWin-1.9.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
+[Scarica MigraWin 1.10.0](https://github.com/renegadeFree/MigraWin/releases/download/v1.10.0/MigraWin-1.10.0-x64.msi) · [Manuale](docs/MANUALE.md) · [Formato archivio](docs/REPOSITORY_FORMAT.md) · [Tutte le release](https://github.com/renegadeFree/MigraWin/releases)
 
 [![Panoramica di MigraWin](docs/images/panoramica.png)](docs/images/panoramica.png)
 
@@ -52,7 +52,7 @@ Cerca per nome, produttore o versione e riconosci ogni applicazione dalla sua ic
 
 [![Inventario applicazioni in MigraWin](docs/images/inventario.png)](docs/images/inventario.png)
 
-Il filtro **Script personali** raccoglie gli script eseguiti dalla cartella utente e gli strumenti locali riconosciuti, tra cui Enter for rename, PM2, n8n, Pi Agent e il proxy DeepSeek per Codex.
+Il filtro **Script personali** raccoglie gli script eseguiti dalla cartella utente e gli strumenti locali riconosciuti, tra cui Nilesoft Shell, ExplorerBlurMica, PM2, n8n, Pi Agent e il proxy DeepSeek per Codex. Nel pannello destro puoi trascinare il separatore verticale per ampliare o ridurre i dettagli.
 
 ### Backup leggibile prima di essere avviato
 
@@ -94,20 +94,20 @@ La lingua si cambia da **Impostazioni → Lingua** e viene applicata immediatame
 
 Requisiti: **Windows 11 x64**.
 
-1. Scarica [MigraWin 1.9.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.9.0/MigraWin-1.9.0-x64.msi).
+1. Scarica [MigraWin 1.10.0 x64](https://github.com/renegadeFree/MigraWin/releases/download/v1.10.0/MigraWin-1.10.0-x64.msi).
 2. Apri l'MSI. L'installazione avviene per l'utente corrente e non richiede privilegi amministrativi; crea i collegamenti nel menu Start e sul Desktop.
 3. Avvia MigraWin dal menu Start.
 
 Puoi verificare il download:
 
 ```powershell
-Get-FileHash .\MigraWin-1.9.0-x64.msi -Algorithm SHA256
+Get-FileHash .\MigraWin-1.10.0-x64.msi -Algorithm SHA256
 ```
 
-Hash SHA-256 della release 1.9.0:
+Hash SHA-256 della release 1.10.0:
 
 ```text
-B425A8D510ADF3E18227D3E860FAED544F05B9632B8870D0D5F82F3BDDBC92AD
+Il valore aggiornato è pubblicato anche in SHA256SUMS.txt nella release.
 ```
 
 > **Nota sulla firma digitale:** la release corrente non ha una firma Authenticode di distribuzione. Windows può quindi mostrare un avviso SmartScreen. La pipeline di firma è pronta e viene attivata quando è disponibile un certificato valido.
@@ -144,7 +144,7 @@ La voce **n8n** include l'installazione npm attiva, i wrapper CLI, database e fi
 - Sono fuori perimetro WSL, container Docker e macchine virtuali.
 - Windows 10 e Windows ARM64 non sono dichiarati supportati.
 - La scansione automatica degli script copre la radice del profilo e gli strumenti noti, non ogni progetto annidato nel disco.
-- La release 1.9.0 non è firmata con un certificato Authenticode.
+- La release 1.10.0 non è firmata con un certificato Authenticode.
 
 ## Sviluppo e collaudo
 

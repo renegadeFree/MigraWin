@@ -110,12 +110,12 @@
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2.2*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1.2*" MinWidth="330" MaxWidth="450" />
+                <ColumnDefinition Width="*" MinWidth="320" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="360" MinWidth="280" MaxWidth="620" />
             </Grid.ColumnDefinitions>
 
-            <Grid>
+            <Grid Grid.Column="0" ClipToBounds="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -131,6 +131,7 @@
                          ItemContainerStyle="{StaticResource AppListViewItem}"
                          BorderThickness="0" Background="Transparent"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         SelectionChanged="ApplicationList_OnSelectionChanged"
                          VirtualizingPanel.IsVirtualizing="True"
                          VirtualizingPanel.VirtualizationMode="Recycling">
                     <ListBox.ItemTemplate>
@@ -187,7 +188,39 @@
                 </ListBox>
             </Grid>
 
-            <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="20">
+            <GridSplitter Grid.Column="1"
+                          Width="10"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          ResizeDirection="Columns"
+                          ResizeBehavior="PreviousAndNext"
+                          ShowsPreview="True"
+                          Cursor="SizeWE"
+                          Background="Transparent"
+                          AutomationProperties.Name="Ridimensiona pannello dettagli">
+                <GridSplitter.Template>
+                    <ControlTemplate TargetType="GridSplitter">
+                        <Grid Background="Transparent">
+                            <Border x:Name="SplitterRule" Width="2" CornerRadius="1"
+                                    HorizontalAlignment="Center"
+                                    Background="{DynamicResource AppStrokeBrush}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="SplitterRule" Property="Background"
+                                        Value="{DynamicResource AppAccentBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="SplitterRule" Property="Background"
+                                        Value="{DynamicResource AppAccentBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </GridSplitter.Template>
+            </GridSplitter>
+
+            <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="20"
+                    ClipToBounds="True">
                 <Grid>
                     <StackPanel Visibility="{Binding HasSelectedApplication, Converter={StaticResource InverseBoolToVisibility}}"
                                 VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="270">
@@ -199,6 +232,7 @@
                                    Style="{StaticResource MutedText}" TextAlignment="Center" />
                     </StackPanel>
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
                                   Visibility="{Binding HasSelectedApplication, Converter={StaticResource BoolToVisibility}}">
                         <StackPanel>
                             <Grid Margin="0,0,0,16">

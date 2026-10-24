@@ -81,6 +81,7 @@ public sealed class PersonalScriptDiscoveryService
             "https://github.com/earendil-works/pi",
             Path.Combine(_appData, "npm", "node_modules", "@earendil-works", "pi-coding-agent"));
         AddCodexProxy(applications, claimed);
+        AddExplorerBlurMica(applications);
         AddRootScripts(applications, claimed, cancellationToken);
 
         return applications
@@ -101,14 +102,36 @@ public sealed class PersonalScriptDiscoveryService
 
         var app = CreateApplication(
             "personal-enter-rename",
-            "Enter for rename",
+            "Enter for rename · Nilesoft Shell",
             "Script personale · Nilesoft Shell",
             "https://nilesoft.org/",
             string.Empty,
-            "Integrazione Esplora file per creare una cartella dalla selezione e avviarne la rinomina.",
+            "Configurazioni, menu e script Nilesoft Shell, inclusa la rinomina immediata della nuova cartella.",
             File.GetLastWriteTime(File.Exists(script) ? script : menu).ToString("dd/MM/yyyy"));
         applications.Add(app);
         ClaimFiles(claimed, script, menu, userShell);
+    }
+
+    private void AddExplorerBlurMica(List<InstalledApplication> applications)
+    {
+        var directory = Path.Combine(_programFiles, "Release");
+        var dll = Path.Combine(directory, "ExplorerBlurMica.dll");
+        if (!File.Exists(dll))
+        {
+            return;
+        }
+
+        var version = System.Diagnostics.FileVersionInfo.GetVersionInfo(dll).FileVersion?.Trim();
+        applications.Add(CreateApplication(
+            "personal-explorer-blur-mica",
+            "ExplorerBlurMica",
+            "Programma locale",
+            "https://github.com/Maplespe/ExplorerBlurMica",
+            string.Empty,
+            "Effetto Mica per Esplora file con configurazione e comandi di registrazione.",
+            string.IsNullOrWhiteSpace(version) ? "Locale" : version,
+            architecture: "x64",
+            estimatedSize: DirectorySize(directory)));
     }
 
     private void AddNpmTool(

@@ -170,6 +170,7 @@ Attività e rapporti	Activity and reports	活动与报告	アクティビティ�
 Cronologia sessione	Session history	会话历史	セッション履歴	세션 기록	Historial de la sesión	Oturum geçmişi	История сеанса	Ιστορικό συνεδρίας	Historique de session	Sitzungsverlauf
 Ultimo rapporto	Latest report	最新报告	最新のレポート	최신 보고서	Último informe	Son rapor	Последний отчёт	Τελευταία αναφορά	Dernier rapport	Letzter Bericht
 Aggiorna	Refresh	刷新	更新	새로 고침	Actualizar	Yenile	Обновить	Ανανέωση	Actualiser	Aktualisieren
+Ridimensiona pannello dettagli	Resize details panel	调整详细信息面板大小	詳細パネルのサイズを変更	세부 정보 패널 크기 조정	Cambiar tamaño del panel de detalles	Ayrıntılar panelini yeniden boyutlandır	Изменить размер панели сведений	Αλλαγή μεγέθους πλαισίου λεπτομερειών	Redimensionner le panneau de détails	Detailbereich skalieren
 Rilevato	Detected	已检测	検出済み	검색됨	Detectado	Algılandı	Обнаружено	Ανιχνεύθηκε	Détectée	Erkannt
 Archiviabile	Archivable	可归档	アーカイブ可能	보관 가능	Archivable	Arşivlenebilir	Можно архивировать	Αρχειοθετήσιμο	Archivable	Archivierbar
 Reinstallabile online	Online reinstallable	可在线重新安装	オンライン再インストール可能	온라인 재설치 가능	Reinstalable en línea	Çevrimiçi yeniden yüklenebilir	Онлайн-переустановка	Επανεγκατάσταση μέσω διαδικτύου	Réinstallation en ligne	Online neu installierbar

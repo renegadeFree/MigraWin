@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.10.0 — 24 ottobre 2026
+
+- aggiunto un separatore accessibile per ridimensionare il pannello dettagli;
+- corretto lo scorrimento orizzontale che tagliava il pannello quando si selezionava un programma;
+- Nilesoft Shell include tutti i file `.nss`, i backup e i contenuti di `imports`;
+- aggiunto ExplorerBlurMica con DLL, configurazione e comandi di registrazione.
+
 ## 1.9.0 — 24 ottobre 2026
 
 - aggiunta la scelta della lingua con applicazione immediata e persistenza locale;

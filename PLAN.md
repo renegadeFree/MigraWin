@@ -63,6 +63,10 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] I predefiniti vengono applicati alle nuove scansioni e ai programmi portabili, con salvataggio JSON atomico.
 - [x] Aggiunta la scelta della lingua con 11 localizzazioni e cambio immediato a runtime.
 - [x] Persistita la lingua in `settings.json` e aggiunto fallback inglese per i testi tecnici.
+- [x] Aggiunto separatore accessibile per ridimensionare il pannello dettagli tra 280 e 620 pixel.
+- [x] Corretto lo scorrimento orizzontale che tagliava il riquadro selezionato e i suoi angoli.
+- [x] Nilesoft Shell include tutti i file `.nss`, backup e script in `imports`.
+- [x] ExplorerBlurMica include DLL, configurazione e comandi di registrazione.
 
 ## Collaudi eseguiti
 
