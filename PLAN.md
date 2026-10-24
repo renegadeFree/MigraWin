@@ -38,6 +38,7 @@ Realizzare un'applicazione Windows installabile per inventariare il software, se
 - [x] Pipeline di firma Authenticode opzionale per exe e MSI.
 - [x] Adattatore Git verificato end-to-end con backup cifrato e ripristino in cartella isolata.
 - [x] Adattatore Notepad++ verificato end-to-end con backup cifrato e ripristino isolato.
+- [x] Layout verificado a 820×540 con navigazione compatta e scorrimento accessibile.
 - [x] Percorso UI Git verificato interattivamente: selezione, backup, conferma, preparazione e ripristino.
 
 ## Collaudi eseguiti
@@ -56,13 +57,13 @@ Ulteriori verifiche effettuate:
 - avvio del binario self-contained installato, finestra responsiva.
 - accessibilità UI: nessun controllo interattivo visibile privo di nome;
 - repository pubblico: `https://github.com/renegadeFree/MigraWin`;
-- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.2`;
-- GitHub Action delle release `v1.4.0` e `v1.4.1` completata con esito `success`;
-- CI su runner Windows pulito completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
-- MSI pubblico v1.4.2 scaricato e verificato: 59.682.816 byte, SHA-256 `0E0F97DFFCD2371E904FDB8F0B9303546885B159812A5553DC7F3311C9A59C08`;
+- release pubblica: `https://github.com/renegadeFree/MigraWin/releases/tag/v1.4.3`;
+- GitHub Action della release `v1.4.3` completata con esito `success`;
+- CI sul commit `71474f3` completata con esito `success`: build, test, installazione MSI, self-check, menu Start e disinstallazione;
+- MSI pubblico v1.4.3 scaricato e verificato: 59.686.912 byte, SHA-256 `7EF9DDA1548DC7DB841C4FF32503E0878ED4494CF25AADB38D20764EF3A12749`;
 - aggiornamento reale 1.4.0 → 1.4.1 rilevato e scaricato;
 - installazione passiva MSI verificata da `Downloads\MigraWinUpdates`;
-- client 1.4.2 riconosce la release `v1.4.2` come versione corrente.
+- client 1.4.3 riconosce la release `v1.4.3` come versione corrente.
 - backup e ripristino Git eseguiti dall'interfaccia reale con contenuto SHA-256 identico prima e dopo.
 
 ## Prossimi incrementi
