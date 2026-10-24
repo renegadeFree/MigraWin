@@ -137,3 +137,5 @@ Gli oggetti temporanei non raggiungibili dal manifest possono essere rimossi dal
 In **Impostazioni → Aggiornamenti** puoi controllare l'ultima release pubblica di MigraWin. Il programma confronta la versione installata con il tag GitHub e mostra il risultato senza modificare automaticamente l'applicazione.
 
 **Scarica e installa** richiede una conferma, scarica l'MSI, verifica SHA-256 usando `SHA256SUMS.txt` e avvia l'installer di Windows. Il download incompleto o con hash diverso viene eliminato.
+
+Il pacchetto verificato viene conservato in `Downloads\MigraWinUpdates`, così Windows Installer può accedervi anche quando l'app è avviata con un token limitato.

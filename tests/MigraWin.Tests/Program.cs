@@ -260,6 +260,10 @@ try
     var updateService = new UpdateService(
         new HttpClient(updateHandler),
         updateDirectory: Path.Combine(root, "updates"));
+    Assert(UpdateService.DefaultUpdateDirectory().EndsWith(
+               Path.Combine("MigraWinUpdates"),
+               StringComparison.OrdinalIgnoreCase),
+        "La cartella predefinita degli aggiornamenti deve essere stabile e accessibile a Windows Installer.");
     var availableUpdate = updateService.ParseRelease(releaseDocument.RootElement, new Version(1, 4, 0));
     Assert(availableUpdate is { Version.Major: 9 },
         "Il client aggiornamenti deve riconoscere una release più recente.");

@@ -28,7 +28,7 @@ Repository pubblico: [renegadeFree/MigraWin](https://github.com/renegadeFree/Mig
 L'installer è generato in:
 
 ```text
-artifacts\installer\MigraWin-1.4.1-x64.msi
+artifacts\installer\MigraWin-1.4.2-x64.msi
 ```
 
 L'installazione è per l'utente corrente e non richiede privilegi amministrativi. L'app viene installata in `%LOCALAPPDATA%\Programs\MigraWin`.
@@ -72,7 +72,7 @@ Oppure, con .NET 10 SDK nel `PATH`:
 dotnet tool restore
 dotnet publish src\MigraWin\MigraWin.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o artifacts\publish
 dotnet tool run wix extension add WixToolset.UI.wixext/6.0.2
-dotnet tool run wix build installer\MigraWin.wxs -ext WixToolset.UI.wixext -arch x64 -o artifacts\installer\MigraWin-1.4.1-x64.msi
+dotnet tool run wix build installer\MigraWin.wxs -ext WixToolset.UI.wixext -arch x64 -o artifacts\installer\MigraWin-1.4.2-x64.msi
 ```
 
 ## Collaudi
@@ -86,6 +86,8 @@ Il collaudo verifica cambio password, password errata, chiave di recupero, lock 
 ## Aggiornamenti
 
 In **Impostazioni** il programma confronta la versione installata con l'ultima release pubblica GitHub. Un aggiornamento può essere scaricato solo dopo conferma; MigraWin verifica l'MSI tramite `SHA256SUMS.txt`, avvia l'installer e si chiude.
+
+Gli installer aggiornati vengono conservati in `Downloads\MigraWinUpdates`.
 
 ## Limiti noti
 

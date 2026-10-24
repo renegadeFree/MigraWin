@@ -33,10 +33,7 @@ public sealed class UpdateService
         _client = client ?? new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
         _owner = owner;
         _repository = repository;
-        _updateDirectory = updateDirectory ?? Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "MigraWin",
-            "Updates");
+        _updateDirectory = updateDirectory ?? DefaultUpdateDirectory();
         if (!_client.DefaultRequestHeaders.UserAgent.Any())
         {
             _client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("MigraWin", CurrentVersion.ToString()));
@@ -202,6 +199,19 @@ public sealed class UpdateService
         }
 
         throw new InvalidDataException($"Hash SHA-256 non trovato per {installerName}.");
+    }
+
+    internal static string DefaultUpdateDirectory()
+    {
+        var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var downloads = string.IsNullOrWhiteSpace(userProfile)
+            ? string.Empty
+            : Path.Combine(userProfile, "Downloads");
+        return Path.Combine(
+            Directory.Exists(downloads)
+                ? downloads
+                : Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "MigraWinUpdates");
     }
 
     private static bool TryParseVersion(string tag, out Version version)

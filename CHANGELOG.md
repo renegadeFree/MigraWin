@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.2 — 24 ottobre 2026
+
+- download degli aggiornamenti spostato in `Downloads\MigraWinUpdates`;
+- maggiore compatibilità con Windows Installer in contesti con token limitato;
+- installazione degli aggiornamenti mantenuta tramite `msiexec`.
+
 ## 1.4.1 — 24 ottobre 2026
 
 - corretto il rilevamento dell'adattatore Git;

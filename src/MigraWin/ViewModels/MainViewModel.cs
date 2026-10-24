@@ -693,7 +693,7 @@ public sealed class MainViewModel : ObservableObject, IAsyncDisposable
         }
     }
 
-    public string VersionLabel => "MigraWin 1.4.1 · Windows x64";
+    public string VersionLabel => "MigraWin 1.4.2 · Windows x64";
     public string DataDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "MigraWin");
